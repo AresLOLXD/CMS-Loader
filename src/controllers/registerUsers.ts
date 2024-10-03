@@ -65,7 +65,6 @@ async function procesaRegistro(
     argumentos = argumentos.map(value => String(value))
 
     const commando = `. /var/local/lib/cms/cmsEnv.sh && cmsAddUser ${shellescape(argumentos)}`.replace(`'""'`, `""`)
-    console.log("Comando: ", commando)
     const salida = await executeProcess(commando)
     //const salida = ""
     return salida
@@ -114,7 +113,7 @@ router.post("/", json(), async (req: Request, res: Response) => {
 
                     lineasCorrectas.push({
                         indice: i + 2,
-                        password: `Password: "${passwordEncontrado}"`
+                        password: passwordEncontrado
                     })
                 }
 
