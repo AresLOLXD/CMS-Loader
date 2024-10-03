@@ -16,28 +16,8 @@
 
 <body>
     <h1>Selecciona las columnas</h1>
-    <h2>Puedes dejar todas vacias, excepto Nombre, Apellidos y Usuario</h2>
+    <h2>Puedes dejar todas vacias, excepto Usuario</h2>
     <form onsubmit="return seleccionaColumnasUser(event)" id="form">
-
-        <select name="Nombre" id="Nombre" required>
-            <% columnas.forEach(function(columna){ %>
-                <option value="<%=columna%>">
-                    <%=columna%>
-                </option>
-                <% }); %>
-        </select>
-        <label for="Nombre">Nombre</label><br>
-
-
-        <select name="Apellidos" id="Apellidos" required>
-            <% columnas.forEach(function(columna){ %>
-                <option value="<%=columna%>">
-                    <%=columna%>
-                </option>
-                <% }); %>
-        </select>
-        <label for="Apellidos">Apellidos</label><br>
-
 
         <select name="Usuario" id="Usuario" required>
             <% columnas.forEach(function(columna){ %>
@@ -47,6 +27,28 @@
                 <% }); %>
         </select>
         <label for="Usuario">Usuario</label><br>
+
+        <select name="Nombre" id="Nombre">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Nombre">Nombre</label><br>
+
+
+        <select name="Apellidos" id="Apellidos">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Apellidos">Apellidos</label><br>
+
 
 
         <select name="Email" id="Email">

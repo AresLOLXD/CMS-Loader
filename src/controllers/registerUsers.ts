@@ -26,36 +26,36 @@ async function procesaRegistro(
         usuario: string
     }) {
     let argumentos = []
-    if (email) {
+    if (email && registro[email]) {
         argumentos.push("-e")
         argumentos.push(registro[email])
     }
-    if (timezone) {
+    if (timezone && registro[timezone]) {
         argumentos.push("-t")
         argumentos.push(registro[timezone])
     }
-    if (languages) {
+    if (languages && registro[languages]) {
         argumentos.push("-l")
         argumentos.push(registro[languages])
     }
-    if (password) {
+    if (password && registro[password]) {
         argumentos.push("-p")
         argumentos.push(registro[password])
         argumentos.push("--bcrypt")
     }
-    if (nombre) {
+    if (nombre && registro[nombre]) {
         argumentos.push(registro[nombre])
     } else {
         argumentos.push('""')
     }
 
-    if (apellidos) {
+    if (apellidos && registro[apellidos]) {
         argumentos.push(registro[apellidos])
     } else {
         argumentos.push('""')
     }
 
-    if (usuario) {
+    if (usuario && registro[usuario]) {
         argumentos.push(registro[usuario])
     } else {
         throw Error("Usuario no definido")

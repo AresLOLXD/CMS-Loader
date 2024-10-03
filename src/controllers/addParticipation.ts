@@ -33,7 +33,7 @@ async function procesaRegistro(
     }) {
     const argumentos: string[] = []
 
-    if (contest) {
+    if (contest && registro[contest]) {
         const contest_numero = Number.parseInt(registro[contest])
         if (Number.isNaN(contest_numero)) {
             throw Error(`El valor ${registro[contest_numero]} para el concurso retraso no es un valor valido`)
@@ -44,11 +44,13 @@ async function procesaRegistro(
     } else {
         throw Error("Concurso no definido")
     }
-    if (ip) {
+
+    if (ip && registro[ip]) {
         argumentos.push("-i")
         argumentos.push(registro[ip])
     }
-    if (tiempo_retraso) {
+
+    if (tiempo_retraso && registro[tiempo_retraso]) {
         const tiempo_retraso_numero = Number.parseInt(registro[tiempo_retraso])
         if (Number.isNaN(tiempo_retraso_numero)) {
             throw Error(`El valor ${registro[tiempo_retraso]} para tiempo retraso no es un valor valido`)
@@ -57,7 +59,8 @@ async function procesaRegistro(
             argumentos.push(tiempo_retraso_numero.toString())
         }
     }
-    if (tiempo_extra) {
+
+    if (tiempo_extra && registro[tiempo_extra]) {
         const tiempo_extra_numero = Number.parseInt(registro[tiempo_extra])
         if (Number.isNaN(tiempo_extra_numero)) {
             throw Error(`El valor ${registro[tiempo_extra]} para tiempo retraso no es un valor valido`)
@@ -66,30 +69,33 @@ async function procesaRegistro(
             argumentos.push(tiempo_extra_numero.toString())
         }
     }
-    if (team) {
+
+    if (team && registro[team]) {
         argumentos.push("-t")
         argumentos.push(registro[team])
     }
-    if (oculto) {
+
+    if (oculto && registro[oculto]) {
         if (registro[oculto].toLowerCase() === "true" || Number.parseInt(registro[oculto]) == 1)
             argumentos.push("--hidden")
         else if (registro[oculto].toLowerCase() !== "false" && Number.isNaN(Number.parseInt(registro[oculto])))
             throw Error(`El valor ${registro[oculto]} para oculto no es un valor valido`)
     }
-    if (sin_restricciones) {
+
+    if (sin_restricciones && registro[sin_restricciones]) {
         if (registro[sin_restricciones].toLowerCase() === "true" || Number.parseInt(registro[sin_restricciones]) == 1)
             argumentos.push("--unrestricted")
         else if (registro[sin_restricciones].toLowerCase() !== "false" && Number.isNaN(Number.parseInt(registro[sin_restricciones])))
             throw Error(`El valor ${registro[sin_restricciones]} para sin restricciones no es un valor valido`)
     }
 
-    if (password) {
+    if (password && registro[password]) {
         argumentos.push("-p")
         argumentos.push(registro[password])
         argumentos.push("--bcrypt")
     }
 
-    if (usuario) {
+    if (usuario && registro[usuario]) {
         argumentos.push(registro[usuario])
     } else {
         throw Error("Usuario no definido")
