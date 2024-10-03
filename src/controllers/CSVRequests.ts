@@ -53,6 +53,12 @@ router.post("/analizeCSV", upload.single("archivo"), async (req: Request, res: R
 router.post("/saveUserCSV", json(), async (req: Request, res: Response) => {
     const { registros, columnas } = req.body
 
+    console.log("Registros: ", registros)
+    console.log("Columnas: ", columnas)
+
+
+
+
     req.session.registros = registros as CSVRecord[]
     req.session.columnas = columnas as string[]
     res.json({

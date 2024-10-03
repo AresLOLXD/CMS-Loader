@@ -156,6 +156,8 @@ router.post("/", async (req: Request, res: Response) => {
     res.setHeader("Content-Length", Buffer.byteLength(csvGenerated))
 
     res.end(csvGenerated)
+    req.session.columnas = undefined;
+    req.session.registros = undefined;
 
 })
 
