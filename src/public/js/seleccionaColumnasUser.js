@@ -24,9 +24,10 @@ async function realizaPeticiones() {
         const formData = new FormData(document.getElementById("form"))
 
 
-        const blob = await fetch("/CSV/registerUsers", {
+        const blob = await fetch("/registerUsers", {
             body: formData,
             method: "POST",
+            redirect: "error"
         }).then(res => {
             if (!res.ok) {
                 const responseError = {

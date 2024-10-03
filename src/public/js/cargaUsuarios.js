@@ -15,6 +15,7 @@ async function realizaPeticiones() {
         const { columnas, registros } = await fetch("/CSV/analizeCSV", {
             body: formData,
             method: "POST",
+            redirect: "error"
         }).then(res => {
             if (!res.ok) {
                 const responseError = {
@@ -35,6 +36,7 @@ async function realizaPeticiones() {
                 columnas,
                 registros
             }),
+            redirect: "error",
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
