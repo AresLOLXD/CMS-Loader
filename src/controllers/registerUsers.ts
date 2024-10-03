@@ -113,7 +113,7 @@ router.post("/", json(), async (req: Request, res: Response) => {
                     }
 
                     lineasCorrectas.push({
-                        indice: i + 1,
+                        indice: i + 2,
                         password: `Password: "${passwordEncontrado}"`
                     })
                 }
@@ -124,7 +124,7 @@ router.post("/", json(), async (req: Request, res: Response) => {
                 if (error instanceof Error)
                     mensaje = error.message
                 lineasErrones.push({
-                    indice: i + 1,
+                    indice: i + 2,
                     mensaje: mensaje
                 })
 

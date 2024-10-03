@@ -36,7 +36,7 @@ async function procesaRegistro(
     if (contest && registro[contest]) {
         const contest_numero = Number.parseInt(registro[contest])
         if (Number.isNaN(contest_numero)) {
-            throw Error(`El valor ${registro[contest_numero]} para el concurso retraso no es un valor valido`)
+            throw Error(`El valor ${registro[contest]} para el concurso no es un valor valido`)
         } else {
             argumentos.push("-c")
             argumentos.push(contest_numero.toString())
@@ -65,7 +65,7 @@ async function procesaRegistro(
         if (Number.isNaN(tiempo_extra_numero)) {
             throw Error(`El valor ${registro[tiempo_extra]} para tiempo retraso no es un valor valido`)
         } else {
-            argumentos.push("-d")
+            argumentos.push("-e")
             argumentos.push(tiempo_extra_numero.toString())
         }
     }
@@ -145,7 +145,7 @@ router.post("/", json(), async (req: Request, res: Response) => {
                 if (error instanceof Error)
                     mensaje = error.message
                 salida.push({
-                    Indice: i + 1,
+                    Indice: i + 2,
                     Extra: mensaje
                 })
 
