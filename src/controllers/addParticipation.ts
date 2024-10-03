@@ -114,24 +114,9 @@ router.post("/", async (req: Request, res: Response) => {
                     usuario
                 })
 
-                if (!password) {
-                    const matched = RegExp(/password\s+(\w+)/).exec(salida)
-                    let passwordEncontrado = "";
-                    if (matched) {
-                        passwordEncontrado = matched[0]
-                    } else {
-                        throw Error(`Revisar usuario ${usuario}, contraseña no se pudo obtener`)
-                    }
-
-                    lineasCorrectas.push({
-                        indice: i,
-                        password: passwordEncontrado
-                    })
-                } else {
-                    lineasCorrectas.push({
-                        indice: i,
-                    })
-                }
+                lineasCorrectas.push({
+                    indice: i + 1,
+                })
 
             } catch (error) {
                 console.error(error)
@@ -139,7 +124,7 @@ router.post("/", async (req: Request, res: Response) => {
                 if (error instanceof Error)
                     mensaje = error.message
                 lineasErrones.push({
-                    indice: i,
+                    indice: i + 1,
                     mensaje: mensaje
                 })
 

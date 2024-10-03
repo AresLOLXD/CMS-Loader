@@ -9,8 +9,12 @@ export async function executeProcess(command: string): Promise<string> {
                 reject(err)
                 return
             }
+            if (salidaErr) {
+                console.error("Salida Error: ", salidaErr)
+                reject(Error(salidaErr))
+                return
+            }
 
-            console.log("Salida Error: ", salidaErr)
             console.log("Salida: ", salida)
             resolve(salida)
         })
