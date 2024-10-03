@@ -3,9 +3,6 @@ const router = Router()
 
 router.get("/seleccionaColumnasUser", (req: Request, res: Response) => {
     const { registros, columnas } = req.session
-
-    console.log("Registros: ", registros)
-    console.log("Columnas: ", columnas)
     if (!registros || !columnas) {
         res.redirect("/cargaUsuarios.html")
         return
@@ -18,9 +15,6 @@ router.get("/seleccionaColumnasUser", (req: Request, res: Response) => {
 
 router.get("/seleccionaColumnasConcurso", (req: Request, res: Response) => {
     const { registros, columnas } = req.session
-
-    console.log("Registros: ", registros)
-    console.log("Columnas: ", columnas)
     if (!registros || !columnas) {
         res.redirect("/cargaConcurso.html")
         return

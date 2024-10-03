@@ -113,12 +113,16 @@ async function procesaRegistro(
 
 router.post("/", async (req: Request, res: Response) => {
     try {
-        const registros = req.body.registros;
+        const { registros } = req.session
+        if (!registros) {
+            res.redirect("/cargaUsuarios.html")
+            return
+        }
         const { contest, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario } = req.body;
         const salida: { Indice: number, Extra: string }[] = []
 
 
-        for (let i = 0; i < registros.lenght; i++) {
+        for (let i = 0; i < registros.length; i++) {
             const registro = registros[i];
             try {
 

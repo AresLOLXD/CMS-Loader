@@ -77,8 +77,6 @@ router.post("/", json(), async (req: Request, res: Response) => {
     try {
         const { registros } = req.session
 
-        console.log("Registros: ", registros)
-
         if (!registros) {
             res.redirect("/cargaUsuarios.html")
             return
