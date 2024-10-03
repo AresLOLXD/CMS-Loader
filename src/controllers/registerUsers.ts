@@ -1,5 +1,5 @@
 import { stringify } from "csv/sync";
-import { Request, Response, Router } from "express";
+import { json, Request, Response, Router } from "express";
 import shellescape from "shell-escape";
 import { CSVRecord, executeProcess } from "../utils";
 
@@ -74,92 +74,100 @@ async function procesaRegistro(
 
 
 
-router.post("/", async (req: Request, res: Response) => {
-    const { registros } = req.session
+router.post("/", json(), async (req: Request, res: Response) => {
+    try {
+        const { registros } = req.session
 
-    console.log("Registros: ",registros)
+        console.log("Registros: ", registros)
 
-    if (!registros) {
-        res.redirect("/cargaUsuarios.html")
-        return
-    }
+        if (!registros) {
+            res.redirect("/cargaUsuarios.html")
+            return
+        }
 
-    const { email, timezone, languages, password, nombre, apellidos, usuario } = req.body.relacion;
+        const { email, timezone, languages, password, nombre, apellidos, usuario } = req.body;
 
-    const lineasCorrectas: { indice: number, password?: string }[] = []
-    const lineasErrones: { indice: number, mensaje: string }[] = []
+        const lineasCorrectas: { indice: number, password?: string }[] = []
+        const lineasErrones: { indice: number, mensaje: string }[] = []
 
 
-    for (let i = 0; i < registros.length; i++) {
-        const registro = registros[i];
-        try {
+        for (let i = 0; i < registros.length; i++) {
+            const registro = registros[i];
+            try {
 
-            const salida = await procesaRegistro({
-                apellidos,
-                email,
-                languages,
-                nombre,
-                password,
-                registro,
-                timezone,
-                usuario
-            })
+                const salida = await procesaRegistro({
+                    apellidos,
+                    email,
+                    languages,
+                    nombre,
+                    password,
+                    registro,
+                    timezone,
+                    usuario
+                })
 
-            if (!password) {
-                const matched = RegExp(/password\s+(\w+)/).exec(salida)
-                let passwordEncontrado = "";
-                if (matched) {
-                    passwordEncontrado = matched[0]
+                if (!password) {
+                    const matched = RegExp(/password\s+(\w+)/).exec(salida)
+                    let passwordEncontrado = "";
+                    if (matched) {
+                        passwordEncontrado = matched[0]
+                    } else {
+                        throw Error(`Revisar usuario ${usuario}, contraseña no se pudo obtener`)
+                    }
+
+                    lineasCorrectas.push({
+                        indice: i,
+                        password: passwordEncontrado
+                    })
                 } else {
-                    throw Error(`Revisar usuario ${usuario}, contraseña no se pudo obtener`)
+                    lineasCorrectas.push({
+                        indice: i,
+                    })
                 }
 
-                lineasCorrectas.push({
+            } catch (error) {
+                console.error(error)
+                let mensaje = "Hubo un error procesando la fila"
+                if (error instanceof Error)
+                    mensaje = error.message
+                lineasErrones.push({
                     indice: i,
-                    password: passwordEncontrado
+                    mensaje: mensaje
                 })
-            } else {
-                lineasCorrectas.push({
-                    indice: i,
-                })
+
             }
-
-        } catch (error) {
-            console.error(error)
-            let mensaje = "Hubo un error procesando la fila"
-            if (error instanceof Error)
-                mensaje = error.message
-            lineasErrones.push({
-                indice: i,
-                mensaje: mensaje
-            })
-
         }
+
+
+        const salida = [
+            ...lineasCorrectas.map(valor => ({
+                Indice: valor.indice,
+                Extra: valor.password ?? ""
+            })),
+            ...lineasErrones.map(valor => ({
+                Indice: valor.indice,
+                Extra: valor.mensaje
+            }))
+        ].sort((a, b) => {
+            return a.Indice - b.Indice
+        })
+
+        const csvGenerated = stringify(salida)
+
+        res.setHeader("Content-Type", "text/csv")
+        res.setHeader("Content-Disposition", "attachment; filename=\"Resultados.csv\"")
+        res.setHeader("Content-Length", Buffer.byteLength(csvGenerated))
+
+        res.end(csvGenerated)
+        req.session.columnas = undefined;
+        req.session.registros = undefined;
+    } catch (err) {
+        console.error("Error: ", err)
+        res.status(500).json({
+            Estado: "Error",
+            Mensaje: err
+        })
     }
-
-
-    const salida = [
-        ...lineasCorrectas.map(valor => ({
-            Indice: valor.indice,
-            Extra: valor.password ?? ""
-        })),
-        ...lineasErrones.map(valor => ({
-            Indice: valor.indice,
-            Extra: valor.mensaje
-        }))
-    ].sort((a, b) => {
-        return a.Indice - b.Indice
-    })
-
-    const csvGenerated = stringify(salida)
-
-    res.setHeader("Content-Type", "text/csv")
-    res.setHeader("Content-Disposition", "attachment; filename=\"Resultados.csv\"")
-    res.setHeader("Content-Length", Buffer.byteLength(csvGenerated))
-
-    res.end(csvGenerated)
-    req.session.columnas = undefined;
-    req.session.registros = undefined;
 
 })
 

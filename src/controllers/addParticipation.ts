@@ -89,83 +89,91 @@ async function procesaRegistro(
 
 
 router.post("/", async (req: Request, res: Response) => {
-    const registros = req.body.registros;
-    const { contest, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario } = req.body.relacion;
+    try {
+        const registros = req.body.registros;
+        const { contest, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario } = req.body;
 
-    const lineasCorrectas: { indice: number, password?: string }[] = []
-    const lineasErrones: { indice: number, mensaje: string }[] = []
+        const lineasCorrectas: { indice: number, password?: string }[] = []
+        const lineasErrones: { indice: number, mensaje: string }[] = []
 
 
-    for (let i = 0; i < registros.lenght; i++) {
-        const registro = registros[i];
-        try {
+        for (let i = 0; i < registros.lenght; i++) {
+            const registro = registros[i];
+            try {
 
-            const salida = await procesaRegistro({
-                registro,
-                contest,
-                ip,
-                tiempo_retraso,
-                tiempo_extra,
-                team,
-                oculto,
-                sin_restricciones,
-                password,
-                usuario
-            })
+                const salida = await procesaRegistro({
+                    registro,
+                    contest,
+                    ip,
+                    tiempo_retraso,
+                    tiempo_extra,
+                    team,
+                    oculto,
+                    sin_restricciones,
+                    password,
+                    usuario
+                })
 
-            if (!password) {
-                const matched = RegExp(/password\s+(\w+)/).exec(salida)
-                let passwordEncontrado = "";
-                if (matched) {
-                    passwordEncontrado = matched[0]
+                if (!password) {
+                    const matched = RegExp(/password\s+(\w+)/).exec(salida)
+                    let passwordEncontrado = "";
+                    if (matched) {
+                        passwordEncontrado = matched[0]
+                    } else {
+                        throw Error(`Revisar usuario ${usuario}, contraseña no se pudo obtener`)
+                    }
+
+                    lineasCorrectas.push({
+                        indice: i,
+                        password: passwordEncontrado
+                    })
                 } else {
-                    throw Error(`Revisar usuario ${usuario}, contraseña no se pudo obtener`)
+                    lineasCorrectas.push({
+                        indice: i,
+                    })
                 }
 
-                lineasCorrectas.push({
+            } catch (error) {
+                console.error(error)
+                let mensaje = "Hubo un error procesando la fila"
+                if (error instanceof Error)
+                    mensaje = error.message
+                lineasErrones.push({
                     indice: i,
-                    password: passwordEncontrado
+                    mensaje: mensaje
                 })
-            } else {
-                lineasCorrectas.push({
-                    indice: i,
-                })
+
             }
-
-        } catch (error) {
-            console.error(error)
-            let mensaje = "Hubo un error procesando la fila"
-            if (error instanceof Error)
-                mensaje = error.message
-            lineasErrones.push({
-                indice: i,
-                mensaje: mensaje
-            })
-
         }
+
+
+        const salida = [
+            ...lineasCorrectas.map(valor => ({
+                Indice: valor.indice,
+                Extra: valor.password ?? ""
+            })),
+            ...lineasErrones.map(valor => ({
+                Indice: valor.indice,
+                Extra: valor.mensaje
+            }))
+        ].sort((a, b) => {
+            return a.Indice - b.Indice
+        })
+
+        const csvGenerated = stringify(salida)
+
+        res.setHeader("Content-Type", "text/csv")
+        res.setHeader("Content-Length", Buffer.byteLength(csvGenerated))
+        res.setHeader("Content-Disposition", "attachment; filename=\"Resultados.csv\"")
+
+        res.end(csvGenerated)
+    } catch (err) {
+        console.error("Error: ", err)
+        res.status(500).json({
+            Estado: "Error",
+            Mensaje: err
+        })
     }
-
-
-    const salida = [
-        ...lineasCorrectas.map(valor => ({
-            Indice: valor.indice,
-            Extra: valor.password ?? ""
-        })),
-        ...lineasErrones.map(valor => ({
-            Indice: valor.indice,
-            Extra: valor.mensaje
-        }))
-    ].sort((a, b) => {
-        return a.Indice - b.Indice
-    })
-
-    const csvGenerated = stringify(salida)
-
-    res.setHeader("Content-Type", "text/csv")
-    res.setHeader("Content-Length", Buffer.byteLength(csvGenerated))
-    res.setHeader("Content-Disposition", "attachment; filename=\"Resultados.csv\"")
-
-    res.end(csvGenerated)
 
 })
 

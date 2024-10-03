@@ -17,47 +17,63 @@ const upload = multer({
 })
 
 router.post("/analizeCSV", upload.single("archivo"), async (req: Request, res: Response) => {
-    if (req.file) {
-        const ruta = req.file.path;
-        const contenido = await readFile(ruta)
-        const registros = parse(contenido, {
-            trim: true,
-            columns: true,
-            skip_empty_lines: true,
-        }) as CSVRecord[]
-        const columnasTodos = registros.map((columnas) => {
-            return Object.keys(columnas)
-        })
+    try {
+        if (req.file) {
+            const ruta = req.file.path;
+            const contenido = await readFile(ruta)
+            const registros = parse(contenido, {
+                trim: true,
+                columns: true,
+                skip_empty_lines: true,
+            }) as CSVRecord[]
+            const columnasTodos = registros.map((columnas) => {
+                return Object.keys(columnas)
+            })
 
-        const columnasFinales = columnasTodos.reduce((columnasEncontradas: string[], columnas: string[]) => {
-            const nuevasColumnasEncontradas = [...columnasEncontradas]
-            for (const columna of columnas) {
-                if (!nuevasColumnasEncontradas.includes(columna)) {
-                    nuevasColumnasEncontradas.push(columna)
+            const columnasFinales = columnasTodos.reduce((columnasEncontradas: string[], columnas: string[]) => {
+                const nuevasColumnasEncontradas = [...columnasEncontradas]
+                for (const columna of columnas) {
+                    if (!nuevasColumnasEncontradas.includes(columna)) {
+                        nuevasColumnasEncontradas.push(columna)
+                    }
                 }
-            }
-            return nuevasColumnasEncontradas
-        }, [] as string[])
+                return nuevasColumnasEncontradas
+            }, [] as string[])
 
-        res.json({
-            registros,
-            columnas: columnasFinales
+            res.json({
+                registros,
+                columnas: columnasFinales
+            })
+
+        } else {
+            res.status(400).end("Archivo no cargado")
+        }
+    } catch (err) {
+        console.error("Error: ", err)
+        res.status(500).json({
+            Estado: "Error",
+            Mensaje: err
         })
-
-    } else {
-        res.status(400).end("Archivo no cargado")
     }
 })
 
 
 router.post("/saveUserCSV", json(), async (req: Request, res: Response) => {
-    const { registros, columnas }: { registros: CSVRecord[], columnas: string[] } = req.body
-    console.log("Columnas y registros guardados")
-    req.session.registros = registros
-    req.session.columnas = columnas
-    res.json({
-        Estado: "ok"
-    })
+    try {
+        const { registros, columnas }: { registros: CSVRecord[], columnas: string[] } = req.body
+        console.log("Columnas y registros guardados")
+        req.session.registros = registros
+        req.session.columnas = columnas
+        res.json({
+            Estado: "ok"
+        })
+    } catch (err) {
+        console.error("Error: ", err)
+        res.status(500).json({
+            Estado: "Error",
+            Mensaje: err
+        })
+    }
 
 })
 

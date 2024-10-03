@@ -21,13 +21,22 @@ function descargaArchivo(blob) {
 
 async function realizaPeticiones() {
     try {
-        const formData = new FormData(document.getElementById("form"))
-
-
+        const body = {
+            email: document.getElementById("Email").value,
+            timezone: document.getElementById("Timezone").value,
+            languages: document.getElementById("Languages").value,
+            password: document.getElementById("Password").value,
+            nombre: document.getElementById("Nombre").value,
+            apellidos: document.getElementById("Apellidos").value,
+            usuario: document.getElementById("Usuario").value,
+        }
         const blob = await fetch("/registerUsers", {
-            body: formData,
+            body: JSON.stringify(body),
             method: "POST",
-            redirect: "error"
+            redirect: "error",
+            headers: {
+                'Content-Type': 'application/json'
+            },
         }).then(res => {
             if (!res.ok) {
                 const responseError = {
