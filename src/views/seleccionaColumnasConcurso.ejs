@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Selecciona tipo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+    <h1>Selecciona las columnas</h1>
+    <h2>Puedes dejar todas vacias, excepto Usuario y Concurso</h2>
+    <form onsubmit="return seleccionaColumnasConcurso(event)" id="form">
+
+        <select name="Usuario" id="Usuario" required>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Usuario">Usuario</label><br>
+
+
+        <select name="Concurso" id="Concurso" required>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Concurso">Concurso</label><br>
+
+
+        <select name="IP" id="IP">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="IP">IP</label><br>
+
+
+        <select name="Tiempo_Retraso" id="Tiempo_Retraso">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Tiempo_Retraso">Tiempo Retraso</label><br>
+
+
+        <select name="Tiempo_Extra" id="Tiempo_Extra">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Tiempo_Extra">Tiempo Extra</label><br>
+
+
+        <select name="Team" id="Team">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Team">Equipo (Team)</label><br>
+
+
+        <select name="Oculto" id="Oculto">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Oculto">Oculto</label><br>
+
+
+        <select name="Sin_Restricciones" id="Sin_Restricciones">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Sin_Restricciones">Sin Restricciones</label><br>
+
+
+        <select name="Password" id="Password">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Password">Contraseña</label><br>
+
+        <button type="submit" id="submit">Enviar</button>
+    </form>
+
+    <script src="public/js/seleccionaColumnasUser.js"></script>
+</body>
+
+</html>

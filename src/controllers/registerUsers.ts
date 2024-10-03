@@ -72,7 +72,6 @@ async function procesaRegistro(
 }
 
 
-
 router.post("/", json(), async (req: Request, res: Response) => {
     try {
         const { registros } = req.session
@@ -86,7 +85,7 @@ router.post("/", json(), async (req: Request, res: Response) => {
 
         const { email, timezone, languages, password, nombre, apellidos, usuario } = req.body;
 
-        const lineasCorrectas: { indice: number, password?: string }[] = []
+        const lineasCorrectas: { indice: number, password: string }[] = []
         const lineasErrones: { indice: number, mensaje: string }[] = []
 
 
@@ -118,10 +117,6 @@ router.post("/", json(), async (req: Request, res: Response) => {
                         indice: i + 1,
                         password: `Password: "${passwordEncontrado}"`
                     })
-                } else {
-                    lineasCorrectas.push({
-                        indice: i + 1,
-                    })
                 }
 
             } catch (error) {
@@ -141,7 +136,7 @@ router.post("/", json(), async (req: Request, res: Response) => {
         const salida = [
             ...lineasCorrectas.map(valor => ({
                 Indice: valor.indice,
-                Extra: valor.password ?? ""
+                Extra: valor.password
             })),
             ...lineasErrones.map(valor => ({
                 Indice: valor.indice,

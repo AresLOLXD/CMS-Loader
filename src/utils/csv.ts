@@ -1,3 +1,3 @@
 export interface CSVRecord {
-    [clave: string]: number | boolean | string;
+    [clave: string]: string;
 }
