@@ -22,7 +22,8 @@ app.use(session({
     secret: '9e9f7a51e150c86ec647c801948f02e5',
     cookie: {
         secure: true,
-        maxAge: 1000 * 60 * 5
+        maxAge: 1000 * 60 * 5,
+        sameSite: "strict"
     },
     resave: false,
     saveUninitialized: true,
