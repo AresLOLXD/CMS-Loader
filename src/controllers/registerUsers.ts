@@ -46,13 +46,13 @@ async function procesaRegistro(
     if (nombre && registro[nombre]) {
         argumentos.push(registro[nombre])
     } else {
-        argumentos.push('""')
+        argumentos.push("")
     }
 
     if (apellidos && registro[apellidos]) {
         argumentos.push(registro[apellidos])
     } else {
-        argumentos.push('""')
+        argumentos.push("")
     }
 
     if (usuario && registro[usuario]) {
