@@ -17,7 +17,11 @@ declare module "express-session" {
 const app = express()
 const port = 9995
 
-const accessLogStream = fs.createWriteStream(join(__dirname, 'access.log'), { flags: 'a' })
+const accessLogStream = fs.createWriteStream(
+    join(__dirname, 'access.log'),
+    {
+        flags: 'as'
+    })
 app.use(session({
     secret: '9e9f7a51e150c86ec647c801948f02e5',
     cookie: {
