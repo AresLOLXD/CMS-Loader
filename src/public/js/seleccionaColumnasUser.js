@@ -27,7 +27,22 @@ async function realizaPeticiones() {
         const blob = await fetch("/CSV/registerUsers", {
             body: formData,
             method: "POST",
-        }).then(res => res.blob())
+        }).then(res => {
+            if (!res.ok) {
+                const responseError = {
+                    type: 'Error',
+                    message: res.message || 'Something went wrong',
+                    data: res.data || '',
+                    code: res.code || '',
+                };
+
+                const error = new Error();
+                error.info = responseError;
+                throw error
+            }
+            return res.blob()
+
+        })
 
         descargaArchivo(blob)
         window.location.replace("index.html")
