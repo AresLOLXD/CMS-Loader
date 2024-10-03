@@ -41,8 +41,8 @@ async function procesaRegistro(
     if (password && registro[password]) {
         argumentos.push("-p")
         argumentos.push(registro[password])
-        argumentos.push("--bcrypt")
     }
+    argumentos.push("--bcrypt")
     if (nombre && registro[nombre]) {
         argumentos.push(registro[nombre])
     } else {
