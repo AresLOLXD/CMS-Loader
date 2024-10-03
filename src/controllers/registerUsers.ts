@@ -41,6 +41,7 @@ async function procesaRegistro(
     if (password) {
         argumentos.push("-p")
         argumentos.push(registro[password])
+        argumentos.push("--bcrypt")
     }
     if (nombre) {
         argumentos.push(registro[nombre])
@@ -65,9 +66,7 @@ async function procesaRegistro(
 
     const commando = `source /var/local/lib/cms/cmsEnv.sh && cmsAddUser ${shellescape(argumentos)}`
     console.log("Comando: ", commando)
-    //const salida = await executeProcess(commando)
-    //console.log("Salida: ", salida)
-    const salida = ""
+    const salida = await executeProcess(commando)
     return salida
 
 }
@@ -152,7 +151,10 @@ router.post("/", json(), async (req: Request, res: Response) => {
             return a.Indice - b.Indice
         })
 
-        const csvGenerated = stringify(salida)
+        const csvGenerated = stringify(salida, {
+            header: true,
+            quoted: true
+        })
 
         res.setHeader("Content-Type", "text/csv")
         res.setHeader("Content-Disposition", "attachment; filename=\"Resultados.csv\"")
