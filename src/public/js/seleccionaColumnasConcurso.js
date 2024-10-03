@@ -58,7 +58,8 @@ async function realizaPeticiones() {
 
         })
 
-        descargaArchivo(blob)
+        if (blob.size > 0)
+            descargaArchivo(blob)
         window.location.replace("index.html")
 
     }
