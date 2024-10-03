@@ -17,11 +17,11 @@ const app = express()
 const port = 9995
 
 const accessLogStream = rfs.createStream(
-    join(__dirname, 'access.log'),
+    "access.log",
     {
         interval: "1d",
         compress: "gzip",
-        maxFiles: 20
+        maxFiles: 20,
     })
 app.use(session({
     secret: '9e9f7a51e150c86ec647c801948f02e5',
