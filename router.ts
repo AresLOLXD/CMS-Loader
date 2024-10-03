@@ -1,4 +1,7 @@
 import { Router } from "express";
+import AnalizeCSVController from "./controllers/analizeCSV"
+const router = Router()
+router.use("/CSV", AnalizeCSVController)
 
-const router=Router()
+
 export default router

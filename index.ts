@@ -1,8 +1,8 @@
-import express, { Router } from "express"
-import Rutas from "./router"
+import express from "express"
+import fs from "fs"
 import morgan from "morgan"
 import path from "path"
-import fs from "fs"
+import Rutas from "./router"
 
 
 const app = express()
@@ -14,5 +14,5 @@ app.use(morgan("common", { stream: accessLogStream }))
 app.use(Rutas)
 
 app.listen(port, () => {
-
+    console.log(`Servidor iniciado en ${port}`)
 })
