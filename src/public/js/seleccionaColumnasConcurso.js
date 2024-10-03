@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function seleccionaColumnasConcurso(event) {
     event.preventDefault()
-    document.getElementById("submit").disabled = "disabled"
+    document.getElementById('submit').setAttribute("disabled", "disabled");
     realizaPeticiones()
     return false;
 }
@@ -66,6 +66,6 @@ async function realizaPeticiones() {
         alert("Hubo un error subiendo los archivos")
         console.error("Errro: ", err)
 
-        document.getElementById("submit").disabled = ""
+        document.getElementById('submit').removeAttribute("disabled");
     }
 }
