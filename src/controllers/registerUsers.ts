@@ -103,7 +103,7 @@ router.post("/", json(), async (req: Request, res: Response) => {
                     usuario
                 })
 
-                if (!password) {
+                if (!password || !registro[password]) {
                     const matched = RegExp(/password\s+(\w+)/).exec(salida)
                     let passwordEncontrado = "";
                     if (matched) {
