@@ -77,6 +77,8 @@ async function procesaRegistro(
 router.post("/", async (req: Request, res: Response) => {
     const { registros } = req.session
 
+    console.log("Registros: ",registros)
+
     if (!registros) {
         res.redirect("/cargaUsuarios.html")
         return

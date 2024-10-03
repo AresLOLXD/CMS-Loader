@@ -56,9 +56,6 @@ router.post("/saveUserCSV", json(), async (req: Request, res: Response) => {
     console.log("Registros: ", registros)
     console.log("Columnas: ", columnas)
 
-
-
-
     req.session.registros = registros
     req.session.columnas = columnas
     res.json({
