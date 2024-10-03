@@ -5,6 +5,7 @@ export async function executeProcess(command: string): Promise<string> {
     return new Promise((resolve, reject) => {
         exec(command, (err, salida, salidaErr) => {
             if (err) {
+                console.error("Comando error: ", err)
                 reject(err)
                 return
             }

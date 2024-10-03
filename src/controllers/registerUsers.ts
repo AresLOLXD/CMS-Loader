@@ -64,7 +64,7 @@ async function procesaRegistro(
 
     argumentos = argumentos.map(value => String(value))
 
-    const commando = `source /var/local/lib/cms/cmsEnv.sh && cmsAddUser ${shellescape(argumentos)}`
+    const commando = `. /var/local/lib/cms/cmsEnv.sh && cmsAddUser ${shellescape(argumentos)}`
     console.log("Comando: ", commando)
     const salida = await executeProcess(commando)
     return salida
