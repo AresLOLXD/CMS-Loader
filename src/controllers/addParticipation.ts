@@ -103,7 +103,7 @@ async function procesaRegistro(
 
 
 
-    const commando = `. /var/local/lib/cms/cmsEnv.sh && cmsAddParticipation ${shellescape(argumentos)}`
+    const commando = `. /var/local/lib/cms/cmsEnv.sh && cmsAddParticipation ${shellescape(argumentos)}`.replace(`'""'`, `""`)
     console.log("Comando: ", commando)
     await executeProcess(commando)
 

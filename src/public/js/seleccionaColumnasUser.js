@@ -37,6 +37,7 @@ async function realizaPeticiones() {
             headers: {
                 'Content-Type': 'application/json'
             },
+            signal: AbortSignal.timeout(100000)
         }).then(res => {
             if (!res.ok) {
                 const responseError = {
