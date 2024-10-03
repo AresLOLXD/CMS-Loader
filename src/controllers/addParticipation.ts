@@ -1,5 +1,5 @@
 import { stringify } from "csv/sync";
-import { Request, Response, Router } from "express";
+import { json, Request, Response, Router } from "express";
 import shellescape from "shell-escape";
 import { CSVRecord, executeProcess } from "../utils";
 
@@ -111,7 +111,7 @@ async function procesaRegistro(
 
 
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", json(), async (req: Request, res: Response) => {
     try {
         const { registros } = req.session
         if (!registros) {
