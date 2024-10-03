@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 const router = Router()
 
-router.get("/selectCollumnsUser", (req: Request, res: Response) => {
+router.get("/seleccionaColumnasUser", (req: Request, res: Response) => {
     const { registros, columnas } = req.session
 
     console.log("Registros: ", registros)

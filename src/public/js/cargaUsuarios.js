@@ -53,7 +53,7 @@ async function realizaPeticiones() {
                 throw error
             }
         })
-        window.location.replace("seleccionaColumnasUser")
+        window.location.replace("/seleccionaColumnasUser")
 
     }
     catch (err) {
