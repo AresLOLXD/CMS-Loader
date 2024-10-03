@@ -1,11 +1,10 @@
 import express, { Request, Response, static as static_ } from "express"
-import fs from "fs"
 import morgan from "morgan"
 import { join } from "path"
 import Rutas from "./router"
 import session from "express-session"
 import { CSVRecord } from "./utils"
-
+import rfs from "rotating-file-stream"
 
 declare module "express-session" {
     interface SessionData {
@@ -17,10 +16,12 @@ declare module "express-session" {
 const app = express()
 const port = 9995
 
-const accessLogStream = fs.createWriteStream(
+const accessLogStream = rfs.createStream(
     join(__dirname, 'access.log'),
     {
-        flags: 'as'
+        interval: "1d",
+        compress: "gzip",
+        maxFiles: 20
     })
 app.use(session({
     secret: '9e9f7a51e150c86ec647c801948f02e5',
