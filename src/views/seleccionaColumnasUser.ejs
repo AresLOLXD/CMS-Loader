@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Selecciona tipo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+    <h1>Selecciona las columnas</h1>
+    <h2>Puedes dejar todas vacias, excepto Nombre, Apellidos y Usuario</h2>
+    <form onsubmit="return seleccionaColumnasUser(event)" id="form">
+
+        <select name="Nombre" id="Nombre" required>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Nombre">Nombre</label>
+
+
+        <select name="Apellidos" id="Apellidos" required>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Apellidos">Apellidos</label>
+
+
+        <select name="Usuario" id="Usuario" required>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Usuario">Usuario</label>
+
+
+        <select name="Email" id="Email">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Email">Email</label>
+
+
+        <select name="Timezone" id="Timezone">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Timezone">Zona Horaria</label>
+
+
+        <select name="Languages" id="Languages">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Languages">Idiomas</label>
+
+
+        <select name="Password" id="Password">
+            <option value="" selected>(Sin asignar)</option>
+            <% columnas.forEach(function(columna){ %>
+                <option value="<%=columna%>">
+                    <%=columna%>
+                </option>
+                <% }); %>
+        </select>
+        <label for="Password">Contraseña</label>
+
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script src="public/js/seleccionaColumnasUser.js"></script>
+</body>
+
+</html>

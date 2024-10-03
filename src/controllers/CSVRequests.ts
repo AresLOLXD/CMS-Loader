@@ -1,14 +1,15 @@
-import { Request, Response, Router } from "express";
-import multer from "multer"
-import { parse } from "csv/sync"
+import { parse } from "csv/sync";
+import { json, Request, Response, Router } from "express";
 import { readFile } from "fs/promises";
+import multer from "multer";
+import { CSVRecord } from "../utils";
 
 const router = Router()
 
 const upload = multer({
     dest: "uploads/",
     fileFilter(req, file, callback) {
-        if (file.mimetype === "text/csv")
+        if (["text/csv", "application/vnd.ms-excel"].includes(file.mimetype))
             callback(null, true)
         else
             callback(null, false)
@@ -23,9 +24,8 @@ router.post("/analizeCSV", upload.single("archivo"), async (req: Request, res: R
             trim: true,
             columns: true,
             skip_empty_lines: true,
-        })
-        //TODO: Arreglar esta cosa
-        const columnasTodos = registros.map((columnas: any) => {
+        }) as CSVRecord[]
+        const columnasTodos = registros.map((columnas) => {
             return Object.keys(columnas)
         })
 
@@ -49,5 +49,16 @@ router.post("/analizeCSV", upload.single("archivo"), async (req: Request, res: R
     }
 })
 
+
+router.post("/saveUserCSV", json(), async (req: Request, res: Response) => {
+    const { registros, columnas } = req.body
+
+    req.session.registros = registros as CSVRecord[]
+    req.session.columnas = columnas as string[]
+    res.json({
+        Estado: "ok"
+    })
+
+})
 
 export default router
