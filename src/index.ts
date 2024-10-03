@@ -4,7 +4,7 @@ import { join } from "path"
 import Rutas from "./router"
 import session from "express-session"
 import { CSVRecord } from "./utils"
-import rfs from "rotating-file-stream"
+import { createStream } from "rotating-file-stream"
 
 declare module "express-session" {
     interface SessionData {
@@ -16,7 +16,7 @@ declare module "express-session" {
 const app = express()
 const port = 9995
 
-const accessLogStream = rfs.createStream(
+const accessLogStream = createStream(
     "access.log",
     {
         interval: "1d",
