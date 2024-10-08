@@ -28,11 +28,12 @@ app.use(session({
     cookie: {
         secure: true,
         maxAge: 1000 * 60 * 5,
-        sameSite: "strict"
+        sameSite: "strict",
     },
     resave: false,
     saveUninitialized: true,
-
+    name: "CMS_Loader",
+    proxy: true,
 }))
 
 app.use(morgan("common", { stream: accessLogStream }))
