@@ -34,7 +34,6 @@ app.use(session({
     },
     resave: true,
     saveUninitialized: true,
-    name: "CMSLoader",
 }))
 app.use((req, _res, next) => {
     req.session.saveAsync = promisify(req.session.save.bind(req.session));
