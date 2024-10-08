@@ -48,7 +48,9 @@ app.set('trust proxy', "loopback")
 
 
 app.all("/*", (req: Request, res: Response) => {
-    res.redirect("/index.html")
+    const URL = req.path
+    const BASEURL = URL.split('/').slice(0, -1).join('/');
+    res.redirect(`${BASEURL}/index.html`)
 })
 
 

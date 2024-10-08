@@ -77,7 +77,9 @@ router.post("/", json(), async (req: Request, res: Response) => {
         const { registros } = req.session
 
         if (!registros) {
-            res.redirect("/cargaUsuarios.html")
+            const URL = req.path
+            const BASEURL = URL.split('/').slice(0, -1).join('/');
+            res.redirect(`${BASEURL}/cargaUsuarios.html`)
             return
         }
 
