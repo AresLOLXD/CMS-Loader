@@ -1,3 +1,5 @@
+const BASEURL = window.location.origin;
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function cargaConcurso(event) {
     event.preventDefault()
@@ -12,7 +14,7 @@ async function realizaPeticiones() {
         const formData = new FormData()
         formData.append("archivo", document.getElementById("archivo").files[0])
 
-        await fetch("/CSV/analizeCSV", {
+        await fetch(`${BASEURL}/CSV/analizeCSV`, {
             body: formData,
             method: "POST",
             redirect: "error"
@@ -30,7 +32,7 @@ async function realizaPeticiones() {
                 throw error
             }
         })
-        window.location.replace("/seleccionaColumnasConcurso")
+        window.location.replace(`${BASEURL}/seleccionaColumnasConcurso`)
 
     }
     catch (err) {
