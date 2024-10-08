@@ -5,11 +5,11 @@ router.get("/seleccionaColumnasUser", (req: Request, res: Response) => {
     const { registros, columnas } = req.session
     if (!registros || !columnas) {
         res.redirect(`cargaUsuarios.html`)
-        return
+    } else {
+        res.render("seleccionaColumnasUser.ejs", {
+            columnas
+        })
     }
-    res.render("seleccionaColumnasUser.ejs", {
-        columnas
-    })
 })
 
 
@@ -17,11 +17,11 @@ router.get("/seleccionaColumnasConcurso", (req: Request, res: Response) => {
     const { registros, columnas } = req.session
     if (!registros || !columnas) {
         res.redirect(`cargaConcurso.html`)
-        return
+    } else {
+        res.render("seleccionaColumnasConcurso.ejs", {
+            columnas
+        })
     }
-    res.render("seleccionaColumnasConcurso.ejs", {
-        columnas
-    })
 })
 
 
