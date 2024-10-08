@@ -32,9 +32,9 @@ app.use(session({
         maxAge: 1000 * 60 * 5,
         sameSite: "strict",
     },
-    resave: false,
+    resave: true,
     saveUninitialized: true,
-    name: "CMS_Loader",
+    name: "CMSLoader",
     proxy: true,
 }))
 app.use((req, _res, next) => {
