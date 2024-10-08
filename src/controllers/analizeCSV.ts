@@ -41,10 +41,10 @@ router.post("/", upload.single("archivo"), async (req: Request, res: Response) =
             }, [] as string[])
             req.session.registros = registros;
             req.session.columnas = columnasFinales
-            req.session.save(() => {
-                res.json({
-                    Estado: "ok"
-                })
+            if (req.session.saveAsync)
+                await req.session.saveAsync()
+            res.json({
+                Estado: "ok"
             })
 
 

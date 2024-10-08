@@ -5,11 +5,13 @@ import { join } from "path"
 import { createStream } from "rotating-file-stream"
 import Rutas from "./router"
 import { CSVRecord } from "./utils"
+import { promisify } from "util"
 
 declare module "express-session" {
     interface SessionData {
         registros: CSVRecord[],
-        columnas: string[]
+        columnas: string[],
+        saveAsync: () => Promise<void>
     }
 }
 
@@ -35,6 +37,10 @@ app.use(session({
     name: "CMS_Loader",
     proxy: true,
 }))
+app.use((req, _res, next) => {
+    req.session.saveAsync = promisify(req.session.save.bind(req.session));
+    next();
+});
 
 app.use(morgan("common", { stream: accessLogStream }))
 app.use("/public", static_(join(__dirname, "public")))
