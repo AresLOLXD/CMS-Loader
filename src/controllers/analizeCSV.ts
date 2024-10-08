@@ -41,11 +41,12 @@ router.post("/", upload.single("archivo"), async (req: Request, res: Response) =
             }, [] as string[])
             req.session.registros = registros;
             req.session.columnas = columnasFinales
-
-
-            res.json({
-                Estado: "ok"
+            req.session.save(() => {
+                res.json({
+                    Estado: "ok"
+                })
             })
+
 
         } else {
             res.status(400).end("Archivo no cargado")
