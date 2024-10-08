@@ -114,9 +114,7 @@ router.post("/", json(), async (req: Request, res: Response) => {
     try {
         const { registros } = req.session
         if (!registros) {
-            const URL = req.path
-            const BASEURL = URL.split('/').slice(0, -1).join('/');
-            res.redirect(`${BASEURL}/cargaConcurso.html`)
+            res.redirect(`cargaConcurso.html`)
             return
         }
         const { contest, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario } = req.body;
