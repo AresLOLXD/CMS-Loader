@@ -1,5 +1,5 @@
 import { parse } from "csv/sync";
-import { json, Request, Response, Router } from "express";
+import { Request, Response, Router } from "express";
 import { readFile } from "fs/promises";
 import multer from "multer";
 import { CSVRecord } from "../utils";
@@ -39,10 +39,12 @@ router.post("/analizeCSV", upload.single("archivo"), async (req: Request, res: R
                 }
                 return nuevasColumnasEncontradas
             }, [] as string[])
+            req.session.registros = registros;
+            req.session.columnas = columnasFinales
+
 
             res.json({
-                registros,
-                columnas: columnasFinales
+                Estado: "ok"
             })
 
         } else {
@@ -55,25 +57,6 @@ router.post("/analizeCSV", upload.single("archivo"), async (req: Request, res: R
             Mensaje: err
         })
     }
-})
-
-
-router.post("/saveUserCSV", json(), async (req: Request, res: Response) => {
-    try {
-        const { registros, columnas }: { registros: CSVRecord[], columnas: string[] } = req.body
-        req.session.registros = registros
-        req.session.columnas = columnas
-        res.json({
-            Estado: "ok"
-        })
-    } catch (err) {
-        console.error("Error: ", err)
-        res.status(500).json({
-            Estado: "Error",
-            Mensaje: err
-        })
-    }
-
 })
 
 export default router

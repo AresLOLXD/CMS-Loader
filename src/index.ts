@@ -1,10 +1,10 @@
 import express, { Request, Response, static as static_ } from "express"
+import session from "express-session"
 import morgan from "morgan"
 import { join } from "path"
-import Rutas from "./router"
-import session from "express-session"
-import { CSVRecord } from "./utils"
 import { createStream } from "rotating-file-stream"
+import Rutas from "./router"
+import { CSVRecord } from "./utils"
 
 declare module "express-session" {
     interface SessionData {

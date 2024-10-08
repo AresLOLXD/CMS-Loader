@@ -12,35 +12,10 @@ async function realizaPeticiones() {
         const formData = new FormData()
         formData.append("archivo", document.getElementById("archivo").files[0])
 
-        const { columnas, registros } = await fetch("/CSV/analizeCSV", {
+        await fetch("/CSV/analizeCSV", {
             body: formData,
             method: "POST",
             redirect: "error"
-        }).then(res => {
-            if (!res.ok) {
-                const responseError = {
-                    type: 'Error',
-                    message: res.message || 'Something went wrong',
-                    data: res.data || '',
-                    code: res.code || '',
-                };
-
-                const error = new Error();
-                error.info = responseError;
-                throw error
-            }
-            return res.json()
-        })
-        await fetch("/CSV/saveUserCSV", {
-            body: JSON.stringify({
-                columnas,
-                registros
-            }),
-            redirect: "error",
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            }
         }).then(res => {
             if (!res.ok) {
                 const responseError = {

@@ -1,8 +1,8 @@
 import { Router } from "express";
-import AnalizeCSVController from "./controllers/CSVRequests"
-import RegisterUsersController from "./controllers/registerUsers"
-import AddParticipationController from "./controllers/addParticipation"
-import ViewsController from "./controllers/views"
+import AddParticipationController from "./controllers/addParticipation";
+import AnalizeCSVController from "./controllers/CSVRequests";
+import RegisterUsersController from "./controllers/registerUsers";
+import ViewsController from "./controllers/views";
 const router = Router()
 
 
