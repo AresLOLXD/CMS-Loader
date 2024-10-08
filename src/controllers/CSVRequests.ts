@@ -16,7 +16,7 @@ const upload = multer({
     },
 })
 
-router.post("/analizeCSV", upload.single("archivo"), async (req: Request, res: Response) => {
+router.post("/", upload.single("archivo"), async (req: Request, res: Response) => {
     try {
         if (req.file) {
             const ruta = req.file.path;

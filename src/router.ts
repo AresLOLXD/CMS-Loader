@@ -6,7 +6,7 @@ import ViewsController from "./controllers/views";
 const router = Router()
 
 
-router.use("/CSV", AnalizeCSVController)
+router.use("/analizeCSV", AnalizeCSVController)
 router.use("/registerUsers", RegisterUsersController)
 router.use("/addParticipation", AddParticipationController)
 router.use("/", ViewsController)

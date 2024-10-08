@@ -1,3 +1,6 @@
+const URL = window.location.pathname;
+const BASEURL = URL.split('/').slice(0, -1).join('/');
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function seleccionaColumnasUser(event) {
     event.preventDefault()
@@ -30,7 +33,7 @@ async function realizaPeticiones() {
             apellidos: document.getElementById("Apellidos").value,
             usuario: document.getElementById("Usuario").value,
         }
-        const blob = await fetch("/registerUsers", {
+        const blob = await fetch(`${BASEURL}/registerUsers`, {
             body: JSON.stringify(body),
             method: "POST",
             redirect: "error",
