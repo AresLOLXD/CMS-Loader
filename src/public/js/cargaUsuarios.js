@@ -1,6 +1,3 @@
-const URL = window.location.pathname;
-let BASEURL = URL.split('/').slice(0, -1).join('/');
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function cargaUsuarios(event) {
     event.preventDefault()
@@ -15,7 +12,7 @@ async function realizaPeticiones() {
         const formData = new FormData()
         formData.append("archivo", document.getElementById("archivo").files[0])
 
-        await fetch(`${BASEURL}/analizeCSV`, {
+        await fetch(`analizeCSV`, {
             body: formData,
             method: "POST",
             redirect: "error"
@@ -34,7 +31,7 @@ async function realizaPeticiones() {
             }
         })
 
-        window.location.replace(`${BASEURL}/seleccionaColumnasUser`)
+        window.location.replace(`seleccionaColumnasUser`)
 
     }
     catch (err) {

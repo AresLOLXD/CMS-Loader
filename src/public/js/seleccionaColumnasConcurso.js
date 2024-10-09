@@ -1,6 +1,3 @@
-const URL = window.location.pathname;
-const BASEURL = URL.split('/').slice(0, -1).join('/');
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function seleccionaColumnasConcurso(event) {
     event.preventDefault()
@@ -36,7 +33,7 @@ async function realizaPeticiones() {
             password: document.getElementById("Password").value,
 
         }
-        const blob = await fetch(`${BASEURL}/addParticipation`, {
+        const blob = await fetch(`addParticipation`, {
             body: JSON.stringify(body),
             method: "POST",
             redirect: "error",
