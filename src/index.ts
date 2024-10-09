@@ -28,14 +28,16 @@ const accessLogStream = createStream(
 app.use(session({
     secret: '9e9f7a51e150c86ec647c801948f02e5',
     cookie: {
-        secure: true,
         maxAge: 1000 * 60 * 5,
         sameSite: "none",
+        httpOnly: true,
+        priority: "high"
     },
     resave: true,
     saveUninitialized: true,
     name: "CMS_Loader",
     proxy: true,
+
 }))
 app.use((req, _res, next) => {
     req.session.saveAsync = promisify(req.session.save.bind(req.session));
