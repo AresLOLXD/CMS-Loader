@@ -54,7 +54,7 @@ app.set('trust proxy', "loopback")
 
 
 app.all("*", (req: Request, res: Response) => {
-    res.redirect("index.html")
+    res.redirect("/index.html")
 })
 
 
