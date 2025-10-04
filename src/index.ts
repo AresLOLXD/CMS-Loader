@@ -53,10 +53,9 @@ app.set("views", join(__dirname, "views"))
 app.set('trust proxy', "loopback")
 
 
-app.all("*", (req: Request, res: Response) => {
+app.all("/:path(*)", (req: Request, res: Response) => {
     res.redirect("/index.html")
 })
-
 
 app.listen(port, () => {
     console.log(`Servidor iniciado en ${port}`)
