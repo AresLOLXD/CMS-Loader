@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express"
+import express from "express"
 import session from "express-session"
 import morgan from "morgan"
 import { join } from "path"
@@ -57,7 +57,11 @@ app.use((req, _res, next) => {
 	next()
 })
 
-app.use(morgan(isProd ? "common" : "dev", { stream: accessLogStream }))
+// Logger en archivo y consola con formato detallado (combined + dev)
+app.use(morgan("combined", { stream: accessLogStream }));
+if (!isProd) {
+    app.use(morgan("dev"));
+}
 app.use("/public", express.static(join(__dirname, "public")))
 app.use("/", express.static(join(__dirname, "public", "html")))
 app.use(Rutas)

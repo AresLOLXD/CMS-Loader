@@ -163,11 +163,9 @@ router.post("/", json(), async (req: Request, res: Response) => {
 
         res.end(csvGenerated)
     } catch (err) {
-        console.error("Error: ", err)
-        res.status(500).json({
-            Estado: "Error",
-            Mensaje: err
-        })
+        console.error("Error addParticipation:", err);
+        const message = err instanceof Error ? err.message : "Error interno";
+        res.status(500).json({ success: false, message });
     }
 
 })

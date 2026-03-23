@@ -1,0 +1,77 @@
+import { parse } from "csv/sync";
+import { Request, Response, Router } from "express";
+import { readFile, unlink } from "fs/promises";
+import multer from "multer";
+import { CSVRecord } from "../utils";
+
+const router = Router();
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20 MB
+
+const upload = multer({
+    dest: "uploads/",
+    limits: {
+        fileSize: MAX_FILE_SIZE,
+    },
+    fileFilter(req, file, callback) {
+        const allowedTypes = ["text/csv", "application/vnd.ms-excel", "text/plain"];
+        if (allowedTypes.includes(file.mimetype) || file.originalname.toLowerCase().endsWith(".csv")) {
+            callback(null, true);
+        } else {
+            callback(new Error("Tipo de archivo no permitido"));
+        }
+    },
+});
+
+router.post("/", upload.single("archivo"), async (req: Request, res: Response) => {
+    let filePath: string | undefined;
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: "Archivo no cargado" });
+        }
+
+        filePath = req.file.path;
+        const contenido = await readFile(filePath);
+        const registros = parse(contenido, {
+            trim: true,
+            columns: true,
+            skip_empty_lines: true,
+        }) as CSVRecord[];
+
+        if (!Array.isArray(registros) || registros.length === 0) {
+            return res.status(422).json({ success: false, message: "CSV vacío o no válido" });
+        }
+
+        const columnasTodos = registros.map((columnas) => Object.keys(columnas));
+        const columnasFinales = columnasTodos.reduce((columnasEncontradas: string[], columnas: string[]) => {
+            const nuevasColumnasEncontradas = [...columnasEncontradas];
+            for (const columna of columnas) {
+                if (!nuevasColumnasEncontradas.includes(columna)) {
+                    nuevasColumnasEncontradas.push(columna);
+                }
+            }
+            return nuevasColumnasEncontradas;
+        }, [] as string[]);
+
+        req.session.registros = registros;
+        req.session.columnas = columnasFinales;
+        if (req.session.saveAsync) {
+            await req.session.saveAsync();
+        }
+
+        res.json({ success: true, message: "CSV procesado", data: { columnas: columnasFinales } });
+    } catch (err) {
+        console.error("Error analizeCSV:", err);
+        const message = err instanceof Error ? err.message : "Error interno";
+        res.status(500).json({ success: false, message });
+    } finally {
+        if (filePath) {
+            try {
+                await unlink(filePath);
+            } catch (ignore) {
+                console.warn("No se pudo eliminar archivo temporal:", filePath, ignore);
+            }
+        }
+    }
+});
+
+export default router;

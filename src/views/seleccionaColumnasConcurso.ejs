@@ -17,7 +17,7 @@
 <body>
     <h1>Selecciona las columnas</h1>
     <h2>Puedes dejar todas vacias, excepto Usuario y Concurso</h2>
-    <form onsubmit="return seleccionaColumnasConcurso(event)" id="form">
+    <form id="form">
 
         <select name="Usuario" id="Usuario" required>
             <% columnas.forEach(function(columna){ %>
@@ -117,7 +117,9 @@
 
         <button type="submit" id="submit">Enviar</button>
     </form>
+    <div id="status" aria-live="polite" style="margin-top:1rem;"></div>
 
+    <script src="public/js/csvUploader.js"></script>
     <script src="public/js/seleccionaColumnasConcurso.js"></script>
 </body>
 

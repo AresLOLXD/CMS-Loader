@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CMS Loader React</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 16px; }
+        .status { margin-top: 10px; border: 1px solid #ccc; padding: 10px; min-height: 1.5rem; }
+        .status.info { background: #f0f8ff; border-color: #66aaff; }
+        .status.success { background: #f0fff0; border-color: #00aa00; }
+        .status.error { background: #fff0f0; border-color: #ff4444; }
+        label { display: block; margin-top: 8px; }
+        select, input { width: 100%; max-width: 400px; margin-top: 4px; }
+        button { margin-top: 14px; padding: 8px 14px; }
+        hr { margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>CMS Loader - React</h1>
+    <p><a href="index.html">Volver al menú</a> | <a href="cargaUsuarios.html">Modo legacy usuarios</a> | <a href="cargaConcurso.html">Modo legacy concursos</a></p>
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="public/js/reactApp.js"></script>
+</body>
+</html>
