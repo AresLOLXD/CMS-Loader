@@ -2,10 +2,13 @@ import { parse } from "csv/sync";
 import { Request, Response, Router } from "express";
 import { readFile, unlink } from "fs/promises";
 import multer from "multer";
+import rateLimit from "express-rate-limit";
 import { CSVRecord } from "../utils";
 
 const router = Router();
 const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20 MB
+
+const limiter = rateLimit({ windowMs: 60_000, limit: 20, standardHeaders: true, legacyHeaders: false })
 
 const upload = multer({
     dest: "uploads/",
@@ -22,7 +25,7 @@ const upload = multer({
     },
 });
 
-router.post("/", upload.single("archivo"), async (req: Request, res: Response) => {
+router.post("/", limiter, upload.single("archivo"), async (req: Request, res: Response) => {
     let filePath: string | undefined;
     try {
         if (!req.file) {

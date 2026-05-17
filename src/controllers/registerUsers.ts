@@ -1,9 +1,12 @@
 import { stringify } from "csv/sync";
 import { json, Request, Response, Router } from "express";
+import rateLimit from "express-rate-limit";
 import shellescape from "shell-escape";
 import { CSVRecord, executeProcess } from "../utils";
 
 const router = Router()
+
+const limiter = rateLimit({ windowMs: 60_000, limit: 5, standardHeaders: true, legacyHeaders: false })
 
 async function procesaRegistro(
     {
@@ -72,7 +75,7 @@ async function procesaRegistro(
 }
 
 
-router.post("/", json(), async (req: Request, res: Response) => {
+router.post("/", limiter, json(), async (req: Request, res: Response) => {
     try {
         const { registros } = req.session
 
