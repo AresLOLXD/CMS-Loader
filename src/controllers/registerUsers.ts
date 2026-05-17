@@ -7,7 +7,7 @@ const router = Router()
 
 const limiter = rateLimit({ windowMs: 60_000, limit: 5, standardHeaders: true, legacyHeaders: false })
 
-async function procesaRegistro(
+export async function procesaRegistro(
     {
         registro,
         email,
