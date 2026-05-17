@@ -100,8 +100,13 @@ async function uploadCsv({
         formData.append("archivo", file);
 
         try {
+            const csrfRes = await fetch('/api/csrf-token')
+            if (!csrfRes.ok) throw new Error('No se pudo obtener el token CSRF')
+            const { token } = await csrfRes.json()
+
             const response = await fetch(endpoint, {
                 method: "POST",
+                headers: { "x-csrf-token": token },
                 body: formData,
             });
 
@@ -158,10 +163,13 @@ async function submitSelectionForm({
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeoutMs);
 
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? ''
+
             const response = await fetch(endpoint, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "x-csrf-token": csrfToken
                 },
                 body: JSON.stringify(data),
                 signal: controller.signal
