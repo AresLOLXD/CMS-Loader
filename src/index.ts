@@ -7,6 +7,9 @@ import { createStream } from "rotating-file-stream"
 import Rutas from "./router"
 import { CSVRecord } from "./utils"
 import { promisify } from "util"
+import helmet from 'helmet'
+import cookieParser from 'cookie-parser'
+import { doubleCsrfProtection } from './csrf'
 
 declare module "express-session" {
     interface SessionData {
@@ -33,6 +36,17 @@ const isProd = process.env.NODE_ENV === "production"
 
 // Mover trust proxy antes de session y adaptarlo a entorno
 app.set('trust proxy', isProd ? 1 : 'loopback')
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'"],
+      imgSrc: ["'self'", "data:"],
+    }
+  }
+}))
 
 // Middlewares de parsing
 app.use(express.json())
@@ -68,6 +82,9 @@ app.use((req, _res, next) => {
 	}
 	next()
 })
+
+app.use(cookieParser(process.env.SESSION_SECRET))
+app.use(doubleCsrfProtection)
 
 // Logger en archivo y consola con formato detallado (combined + dev)
 app.use(morgan("combined", { stream: accessLogStream }));
