@@ -1,7 +1,6 @@
 import { Request, Response, Router } from "express"
 import rateLimit from "express-rate-limit"
-import shellescape from "shell-escape"
-import { CSVRecord, executeProcess, processRecords } from "../utils"
+import { buildCmsCommand, CSVRecord, executeProcess, processRecords } from "../utils"
 
 const router = Router()
 
@@ -64,7 +63,7 @@ export async function procesaRegistro(
         throw new Error("Usuario no definido")
     }
 
-    const commando = `. /var/local/lib/cms/cmsEnv.sh && cmsAddUser ${shellescape(argumentos)}`.replace(/'""'/g, `""`)
+    const commando = buildCmsCommand('cmsAddUser', argumentos)
     return executeProcess(commando)
 }
 
