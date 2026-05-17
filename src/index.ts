@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from "express"
 import session from "express-session"
 import morgan from "morgan"
@@ -11,9 +12,20 @@ declare module "express-session" {
     interface SessionData {
         registros: CSVRecord[],
         columnas: string[],
+        authenticated?: boolean,
         saveAsync: () => Promise<void>
     }
 }
+
+function validateEnv(): void {
+  const required = ['SESSION_SECRET', 'ADMIN_USER', 'ADMIN_PASSWORD']
+  const missing = required.filter(key => !process.env[key])
+  if (missing.length > 0) {
+    console.error(`Missing required env vars: ${missing.join(', ')}`)
+    process.exit(1)
+  }
+}
+validateEnv()
 
 const app = express()
 const port = Number(process.env.PORT) || 9995
@@ -36,7 +48,7 @@ const accessLogStream = createStream("access.log", {
 
 // Session optimizada: secure/sameSite condicional según entorno
 app.use(session({
-	secret: process.env.SESSION_SECRET || '9e9f7a51e150c86ec647c801948f02e5',
+	secret: process.env.SESSION_SECRET!,
 	cookie: {
 		secure: isProd,
 		maxAge: 1000 * 60 * 5,
