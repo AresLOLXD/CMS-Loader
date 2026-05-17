@@ -1,5 +1,5 @@
 import { parse } from "csv/sync";
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { readFile, unlink } from "fs/promises";
 import multer from "multer";
 import rateLimit from "express-rate-limit";
@@ -25,7 +25,15 @@ const upload = multer({
     },
 });
 
-router.post("/", limiter, upload.single("archivo"), async (req: Request, res: Response) => {
+router.post("/", limiter, (req: Request, res: Response, next: NextFunction) => {
+    upload.single("archivo")(req, res, (err) => {
+        if (err) {
+            res.status(400).json({ success: false, message: err.message })
+            return
+        }
+        next()
+    })
+}, async (req: Request, res: Response) => {
     let filePath: string | undefined;
     try {
         if (!req.file) {
