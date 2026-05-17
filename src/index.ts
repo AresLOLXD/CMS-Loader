@@ -7,9 +7,9 @@ import { createStream } from "rotating-file-stream"
 import Rutas from "./router"
 import { CSVRecord } from "./utils"
 import { promisify } from "util"
-import helmet from 'helmet'
-import cookieParser from 'cookie-parser'
-import { doubleCsrfProtection } from './csrf'
+import helmet from "helmet"
+import cookieParser from "cookie-parser"
+import { doubleCsrfProtection } from "./csrf"
 
 declare module "express-session" {
     interface SessionData {
@@ -38,14 +38,14 @@ const isProd = process.env.NODE_ENV === "production"
 app.set('trust proxy', isProd ? 1 : 'loopback')
 
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
-      styleSrc: ["'self'"],
-      imgSrc: ["'self'", "data:"],
-    }
-  }
+	contentSecurityPolicy: {
+		directives: {
+			defaultSrc: ["'self'"],
+			scriptSrc: ["'self'"],
+			styleSrc: ["'self'"],
+			imgSrc: ["'self'", "data:"],
+		}
+	}
 }))
 
 // Middlewares de parsing
@@ -59,6 +59,12 @@ const accessLogStream = createStream("access.log", {
 	maxFiles: 20,
 	path: join(__dirname, "logs"),
 })
+
+// Logger en archivo y consola con formato detallado (combined + dev)
+app.use(morgan("combined", { stream: accessLogStream }));
+if (!isProd) {
+    app.use(morgan("dev"));
+}
 
 // Session optimizada: secure/sameSite condicional según entorno
 app.use(session({
@@ -83,14 +89,9 @@ app.use((req, _res, next) => {
 	next()
 })
 
-app.use(cookieParser(process.env.SESSION_SECRET))
+app.use(cookieParser(process.env.SESSION_SECRET!))
 app.use(doubleCsrfProtection)
 
-// Logger en archivo y consola con formato detallado (combined + dev)
-app.use(morgan("combined", { stream: accessLogStream }));
-if (!isProd) {
-    app.use(morgan("dev"));
-}
 app.use("/public", express.static(join(__dirname, "public")))
 app.use("/", express.static(join(__dirname, "public", "html")))
 app.use(Rutas)
