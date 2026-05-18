@@ -5,7 +5,6 @@ onlyBuiltDependencies:
   - esbuild
 
 blockExoticSubdeps: true
-trustPolicy: no-downgrade
 minimumReleaseAge: 1440
 allowBuilds:
   esbuild: true
