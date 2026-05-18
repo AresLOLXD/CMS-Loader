@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.2...v1.0.3) (2026-05-18)
+
+
+### Bug Fixes
+
+* mark session modified on csrf-token route to ensure session cookie is sent ([05c5db7](https://github.com/AresLOLXD/CMS-Loader/commit/05c5db74a92a523b3724a58f0d7f326e1b5b7b2a))
+
 ## [1.0.2](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.1...v1.0.2) (2026-05-18)
 
 
