@@ -119,6 +119,10 @@
         <button type="submit" id="submit">Enviar</button>
     </form>
     <div id="status" aria-live="polite" style="margin-top:1rem;"></div>
+    <div id="progress" style="display:none" aria-live="polite">
+        <p>Procesando: <span id="progress-count">0</span> / <span id="progress-total">0</span> registros</p>
+        <progress id="progress-bar" value="0" max="100" style="width:100%"></progress>
+    </div>
 
     <script src="public/js/csvUploader.js"></script>
     <script src="public/js/seleccionaColumnasConcurso.js"></script>
