@@ -15,7 +15,8 @@ declare module "express-session" {
     interface SessionData {
         authenticated?: boolean,
         activeJobId?: string,
-        saveAsync?: () => Promise<void>
+        saveAsync?: () => Promise<void>,
+        csrfInit?: boolean
     }
 }
 
