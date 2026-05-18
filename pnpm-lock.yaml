@@ -56,6 +56,9 @@ importers:
       shell-escape:
         specifier: ^0.2.0
         version: 0.2.0
+      tsx:
+        specifier: ^4.22.1
+        version: 4.22.1
     devDependencies:
       '@commitlint/cli':
         specifier: ^21.0.1
@@ -111,9 +114,6 @@ importers:
       supertest:
         specifier: ^7.2.2
         version: 7.2.2
-      tsx:
-        specifier: ^4.22.1
-        version: 4.22.1
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

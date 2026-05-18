@@ -16,10 +16,16 @@ export default function ProcessingStep() {
   const [percent, setPercent] = useState(0)
   const [error, setError] = useState('')
 
+  if (!jobId.value) {
+    wizardStep.value = 'mapping'
+    return null
+  }
+
   useEffect(() => {
     const currentJobId = jobId.value
     if (!currentJobId) return
 
+    let closed = false
     const source = new EventSource(`/jobs/${currentJobId}/events`)
 
     source.addEventListener('progress', (e: MessageEvent) => {
@@ -30,6 +36,7 @@ export default function ProcessingStep() {
     })
 
     source.addEventListener('done', async () => {
+      closed = true
       source.close()
       const filename = mode.value === 'users' ? 'Resultados usuarios.csv' : 'Errores concurso.csv'
       try {
@@ -45,12 +52,14 @@ export default function ProcessingStep() {
     })
 
     source.addEventListener('job-error', (e: MessageEvent) => {
+      closed = true
       source.close()
       const data = JSON.parse(e.data) as { message?: string }
       setError(data.message ?? 'Error interno en el procesamiento')
     })
 
     source.onerror = () => {
+      if (closed) return
       source.close()
       setError('Error de conexión con el servidor.')
     }
