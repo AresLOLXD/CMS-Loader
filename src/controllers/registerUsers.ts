@@ -1,6 +1,8 @@
 import { Request, Response, Router } from "express"
 import rateLimit from "express-rate-limit"
-import { buildCmsCommand, CSVRecord, executeProcess, processRecords } from "../utils"
+import pLimit from "p-limit"
+import { CSVRecord, buildCmsCommand, executeProcess } from "../utils"
+import { jobStore } from "../jobs/JobStore"
 
 const router = Router()
 
@@ -63,29 +65,47 @@ export async function procesaRegistro(
         throw new Error("Usuario no definido")
     }
 
-    const commando = buildCmsCommand('cmsAddUser', argumentos)
-    return executeProcess(commando)
+    return executeProcess(buildCmsCommand('cmsAddUser', argumentos))
 }
 
 
 router.post("/", limiter, async (req: Request, res: Response) => {
+    const job = req.session.activeJobId ? jobStore.get(req.session.activeJobId) : undefined
+    if (!job) {
+        res.status(400).json({ success: false, message: "No hay registros cargados" })
+        return
+    }
+
     const { email, timezone, languages, password, nombre, apellidos, usuario } = req.body
+    jobStore.update(job.id, { status: 'running', filename: 'Resultados.csv' })
+    res.json({ jobId: job.id })
 
-    await processRecords(req, res, {
-        redirectTo: "cargaUsuarios.html",
-        filename: "Resultados.csv",
-        processor: async (registro) => {
-            const salida = await procesaRegistro({ registro, email, timezone, languages, password, nombre, apellidos, usuario })
-
-            if (!password || !registro[password]) {
-                const matched = /password\s+(\w+)/.exec(salida)
-                if (!matched) {
-                    throw new Error(`Revisar usuario ${usuario}, contraseña no se pudo obtener`)
+    const limit = pLimit(Number(process.env.CMS_CONCURRENCY) || 5)
+    const tasks = job.records.map((registro, i) =>
+        limit(async () => {
+            try {
+                const salida = await procesaRegistro({ registro, email, timezone, languages, password, nombre, apellidos, usuario })
+                if (!password || !registro[password]) {
+                    const matched = /password\s+(\w+)/.exec(salida)
+                    if (!matched) throw new Error(`Revisar usuario ${usuario}, contraseña no se pudo obtener`)
+                    job.results.push({ Indice: i + 2, Extra: matched[1] })
                 }
-                return matched[1]
+            } catch (err) {
+                job.results.push({ Indice: i + 2, Extra: err instanceof Error ? err.message : 'Error procesando la fila' })
+            } finally {
+                job.processed++
             }
-        }
-    })
+        })
+    )
+
+    Promise.all(tasks)
+        .then(() => {
+            job.results.sort((a, b) => a.Indice - b.Indice)
+            jobStore.update(job.id, { status: 'done' })
+        })
+        .catch(() => {
+            jobStore.update(job.id, { status: 'error' })
+        })
 })
 
 

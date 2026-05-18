@@ -28,6 +28,7 @@
     "helmet": "^8.1.0",
     "morgan": "^1.10.1",
     "multer": "^2.1.1",
+    "p-limit": "^6.2.0",
     "rotating-file-stream": "^3.2.9",
     "shell-escape": "^0.2.0"
   },

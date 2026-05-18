@@ -1,6 +1,8 @@
 import { Request, Response, Router } from "express"
 import rateLimit from "express-rate-limit"
-import { buildCmsCommand, CSVRecord, executeProcess, parseBoolFlag, processRecords } from "../utils"
+import pLimit from "p-limit"
+import { CSVRecord, buildCmsCommand, executeProcess, parseBoolFlag } from "../utils"
+import { jobStore } from "../jobs/JobStore"
 
 const router = Router()
 
@@ -97,21 +99,42 @@ export async function procesaRegistro(
         throw new Error("Usuario no definido")
     }
 
-    const commando = buildCmsCommand('cmsAddParticipation', argumentos)
-    await executeProcess(commando)
+    await executeProcess(buildCmsCommand('cmsAddParticipation', argumentos))
 }
 
 
 router.post("/", limiter, async (req: Request, res: Response) => {
-    const { contest, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario } = req.body
+    const job = req.session.activeJobId ? jobStore.get(req.session.activeJobId) : undefined
+    if (!job) {
+        res.status(400).json({ success: false, message: "No hay registros cargados" })
+        return
+    }
 
-    await processRecords(req, res, {
-        redirectTo: "cargaConcurso.html",
-        filename: "Errores.csv",
-        processor: async (registro) => {
-            await procesaRegistro({ registro, contest, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario })
-        }
-    })
+    const { contest, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario } = req.body
+    jobStore.update(job.id, { status: 'running', filename: 'Errores.csv' })
+    res.json({ jobId: job.id })
+
+    const limit = pLimit(Number(process.env.CMS_CONCURRENCY) || 5)
+    const tasks = job.records.map((registro, i) =>
+        limit(async () => {
+            try {
+                await procesaRegistro({ registro, contest, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario })
+            } catch (err) {
+                job.results.push({ Indice: i + 2, Extra: err instanceof Error ? err.message : 'Error procesando la fila' })
+            } finally {
+                job.processed++
+            }
+        })
+    )
+
+    Promise.all(tasks)
+        .then(() => {
+            job.results.sort((a, b) => a.Indice - b.Indice)
+            jobStore.update(job.id, { status: 'done' })
+        })
+        .catch(() => {
+            jobStore.update(job.id, { status: 'error' })
+        })
 })
 
 
