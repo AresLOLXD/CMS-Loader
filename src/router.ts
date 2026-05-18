@@ -11,6 +11,10 @@ const router = Router()
 
 router.use("/login", AuthController)
 
+router.get("/logout", (req, res) => {
+  req.session.destroy(() => res.redirect('/'))
+})
+
 router.get("/api/csrf-token", (req, res) => {
   const token = generateToken(req, res)
   res.json({ token })

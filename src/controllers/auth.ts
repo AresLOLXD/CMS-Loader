@@ -32,8 +32,5 @@ router.post('/', loginLimiter, (req: Request, res: Response) => {
   res.status(401).json({ success: false, message: 'Usuario o contraseña incorrectos' })
 })
 
-router.get('/logout', (req: Request, res: Response) => {
-  req.session.destroy(() => res.redirect('/'))
-})
 
 export default router
