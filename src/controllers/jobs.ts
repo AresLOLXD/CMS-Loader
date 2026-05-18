@@ -4,8 +4,11 @@ import { jobStore } from "../jobs/JobStore"
 
 const router = Router()
 
-router.get("/:id/events", (req: Request, res: Response) => {
-    const jobId = req.params.id as string
+const POLL_INTERVAL_MS = 200
+const HEARTBEAT_INTERVAL_MS = 15_000
+
+router.get("/:id/events", (req: Request<{ id: string }>, res: Response) => {
+    const jobId = req.params.id
     const job = jobStore.get(jobId)
     if (!job) {
         res.status(404).json({ success: false, message: "Trabajo no encontrado" })
@@ -14,14 +17,19 @@ router.get("/:id/events", (req: Request, res: Response) => {
 
     res.setHeader("Content-Type", "text/event-stream")
     res.setHeader("Cache-Control", "no-cache")
+    // Disable nginx buffering so events reach the client immediately
     res.setHeader("X-Accel-Buffering", "no")
     res.flushHeaders()
 
     let lastProcessed = -1
+    let ticksSinceWrite = 0
+    const heartbeatEvery = Math.ceil(HEARTBEAT_INTERVAL_MS / POLL_INTERVAL_MS)
 
     const interval = setInterval(() => {
         const current = jobStore.get(jobId)
         if (!current) {
+            // Job was TTL-evicted while client was connected
+            res.write(`event: job-error\ndata: ${JSON.stringify({ message: "Trabajo expirado" })}\n\n`)
             clearInterval(interval)
             res.end()
             return
@@ -29,10 +37,17 @@ router.get("/:id/events", (req: Request, res: Response) => {
 
         if (current.processed !== lastProcessed) {
             lastProcessed = current.processed
+            ticksSinceWrite = 0
             const percent = current.total > 0
                 ? Math.round((current.processed / current.total) * 100)
                 : 0
             res.write(`event: progress\ndata: ${JSON.stringify({ processed: current.processed, total: current.total, percent })}\n\n`)
+        } else {
+            ticksSinceWrite++
+            if (ticksSinceWrite >= heartbeatEvery) {
+                ticksSinceWrite = 0
+                res.write(": ping\n\n")
+            }
         }
 
         if (current.status === 'done') {
@@ -43,19 +58,20 @@ router.get("/:id/events", (req: Request, res: Response) => {
         }
 
         if (current.status === 'error') {
+            // event named job-error (not error) to avoid collision with EventSource's built-in onerror
             res.write(`event: job-error\ndata: ${JSON.stringify({ message: "Error interno" })}\n\n`)
             clearInterval(interval)
             res.end()
         }
-    }, 200)
+    }, POLL_INTERVAL_MS)
 
     req.on('close', () => {
         clearInterval(interval)
     })
 })
 
-router.get("/:id/result", (req: Request, res: Response) => {
-    const job = jobStore.get(req.params.id as string)
+router.get("/:id/result", (req: Request<{ id: string }>, res: Response) => {
+    const job = jobStore.get(req.params.id)
     if (!job) {
         res.status(404).json({ success: false, message: "Trabajo no encontrado" })
         return
