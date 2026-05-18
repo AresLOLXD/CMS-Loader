@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
         formId: "form",
         submitId: "submit",
         statusId: "status",
+        progressId: "progress",
         endpoint: "registerUsers",
         downloadFilename: "Resultados.csv",
         successRedirect: "index.html"

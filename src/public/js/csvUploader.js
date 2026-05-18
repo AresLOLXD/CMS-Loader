@@ -136,10 +136,10 @@ async function submitSelectionForm({
     formId,
     submitId,
     statusId,
+    progressId,
     endpoint,
     downloadFilename,
     successRedirect,
-    timeoutMs = 20 * 60 * 1000
 }) {
     const form = document.getElementById(formId);
     if (!form) return;
@@ -147,34 +147,27 @@ async function submitSelectionForm({
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        setStatus(statusId, "Procesando...", "info");
+        setStatus(statusId, "Enviando...", "info");
         disableButton(submitId);
 
         const data = {};
-        const elements = Array.from(form.elements).filter((el) => el instanceof HTMLInputElement || el instanceof HTMLSelectElement);
-
+        const elements = Array.from(form.elements).filter(
+            (el) => el instanceof HTMLInputElement || el instanceof HTMLSelectElement
+        );
         for (const element of elements) {
-            if (element.name) {
-                data[element.name.toLowerCase()] = element.value;
-            }
+            if (element.name) data[element.name.toLowerCase()] = element.value;
         }
 
         try {
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), timeoutMs);
-
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? ''
-
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
             const response = await fetch(endpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "x-csrf-token": csrfToken
+                    "x-csrf-token": csrfToken,
                 },
                 body: JSON.stringify(data),
-                signal: controller.signal
             });
-            clearTimeout(id);
 
             if (!response.ok) {
                 let text = "Error en la petición.";
@@ -187,15 +180,58 @@ async function submitSelectionForm({
                 throw new Error(text);
             }
 
-            const blob = await response.blob();
-            if (blob.size > 0) {
-                downloadBlob(blob, downloadFilename);
-            }
+            const { jobId } = await response.json();
+            setStatus(statusId, "Procesando...", "info");
 
-            setStatus(statusId, "Operación completada.", "success");
-            if (successRedirect) {
-                window.location.replace(successRedirect);
-            }
+            const progressEl = progressId ? document.getElementById(progressId) : null;
+            const progressCount = document.getElementById("progress-count");
+            const progressTotal = document.getElementById("progress-total");
+            const progressBar = document.getElementById("progress-bar");
+            if (progressEl) progressEl.style.display = "";
+
+            const source = new EventSource(`/jobs/${jobId}/events`);
+
+            source.addEventListener("progress", (e) => {
+                const { processed, total, percent } = JSON.parse(e.data);
+                setStatus(statusId, `Procesando ${processed} de ${total} registros...`, "info");
+                if (progressCount) progressCount.textContent = processed;
+                if (progressTotal) progressTotal.textContent = total;
+                if (progressBar) { progressBar.value = percent; progressBar.max = 100; }
+            });
+
+            source.addEventListener("done", async () => {
+                source.close();
+                setStatus(statusId, "Descargando resultados...", "info");
+                try {
+                    const csvRes = await fetch(`/jobs/${jobId}/result`);
+                    if (csvRes.ok) {
+                        const blob = await csvRes.blob();
+                        if (blob.size > 0) downloadBlob(blob, downloadFilename);
+                    }
+                } catch (e) {
+                    console.error("Error descargando resultado:", e);
+                }
+                setStatus(statusId, "Operación completada.", "success");
+                if (progressEl) progressEl.style.display = "none";
+                if (successRedirect) window.location.replace(successRedirect);
+            });
+
+            source.addEventListener("job-error", (e) => {
+                source.close();
+                let message = "Error interno";
+                try { message = JSON.parse(e.data).message; } catch (ignored) { /* ignore */ }
+                setStatus(statusId, `Error: ${message}`, "error");
+                if (progressEl) progressEl.style.display = "none";
+                enableButton(submitId);
+            });
+
+            source.onerror = () => {
+                source.close();
+                setStatus(statusId, "Error de conexión con el servidor.", "error");
+                if (progressEl) progressEl.style.display = "none";
+                enableButton(submitId);
+            };
+
         } catch (error) {
             const message = (error instanceof Error ? error.message : "Error de red") || "Error al procesar";
             setStatus(statusId, `Error: ${message}`, "error");
