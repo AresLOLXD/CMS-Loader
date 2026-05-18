@@ -4,6 +4,7 @@ import { readFile, unlink } from "fs/promises";
 import multer from "multer";
 import rateLimit from "express-rate-limit";
 import { CSVRecord } from "../utils";
+import { jobStore } from "../jobs/JobStore"
 
 const router = Router();
 const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20 MB
@@ -63,13 +64,12 @@ router.post("/", limiter, (req: Request, res: Response, next: NextFunction) => {
             return nuevasColumnasEncontradas;
         }, [] as string[]);
 
-        req.session.registros = registros;
-        req.session.columnas = columnasFinales;
+        const job = jobStore.create(registros, columnasFinales)
+        req.session.activeJobId = job.id
         if (req.session.saveAsync) {
-            await req.session.saveAsync();
+            await req.session.saveAsync()
         }
-
-        res.json({ success: true, message: "CSV procesado", data: { columnas: columnasFinales } });
+        res.json({ success: true, message: "CSV procesado", data: { jobId: job.id, columnas: columnasFinales } })
     } catch (err) {
         console.error("Error analizeCSV:", err);
         const message = err instanceof Error ? err.message : "Error interno";

@@ -5,18 +5,17 @@ import morgan from "morgan"
 import { join } from "path"
 import { createStream } from "rotating-file-stream"
 import Rutas from "./router"
-import { CSVRecord } from "./utils"
 import { promisify } from "util"
+import { jobStore } from "./jobs/JobStore"
 import helmet from "helmet"
 import cookieParser from "cookie-parser"
 import { doubleCsrfProtection } from "./csrf"
 
 declare module "express-session" {
     interface SessionData {
-        registros: CSVRecord[],
-        columnas: string[],
         authenticated?: boolean,
-        saveAsync: () => Promise<void>
+        activeJobId?: string,
+        saveAsync?: () => Promise<void>
     }
 }
 
@@ -29,6 +28,7 @@ function validateEnv(): void {
   }
 }
 validateEnv()
+jobStore.startTtlCleanup()
 
 const app = express()
 const port = Number(process.env.PORT) || 9995

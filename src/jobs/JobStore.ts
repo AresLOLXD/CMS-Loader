@@ -54,7 +54,7 @@ class JobStore {
                     this.jobs.delete(id)
                 }
             }
-        }, 10 * 60 * 1000)
+        }, 10 * 60 * 1000).unref()
     }
 }
 

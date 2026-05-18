@@ -13,7 +13,8 @@ export async function processRecords(
     res: Response,
     options: ProcessRecordsOptions
 ): Promise<void> {
-    const { registros } = req.session
+    const session = req.session as typeof req.session & { registros?: CSVRecord[] }
+    const { registros } = session
     if (!registros) {
         res.redirect(options.redirectTo)
         return
@@ -39,8 +40,8 @@ export async function processRecords(
 
     const csvGenerated = stringify(salida, { header: true, quoted: true })
 
-    delete req.session.registros
-    delete req.session.columnas
+    delete session.registros
+    delete (req.session as typeof req.session & { columnas?: string[] }).columnas
 
     res.setHeader("Content-Type", "text/csv")
     res.setHeader("Content-Disposition", `attachment; filename="${options.filename}"`)
