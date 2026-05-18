@@ -5,6 +5,13 @@
 
 * prevent semantic-release pre-push loop on release commits ([4a7af7b](https://github.com/AresLOLXD/CMS-Loader/commit/4a7af7b6ee7dce7c73fc685fa700e6e689477c36))
 
+## [1.0.1](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.0...v1.0.1) (2026-05-18)
+
+
+### Bug Fixes
+
+* prevent semantic-release pre-push loop on release commits ([4a7af7b](https://github.com/AresLOLXD/CMS-Loader/commit/4a7af7b6ee7dce7c73fc685fa700e6e689477c36))
+
 # 1.0.0 (2026-05-18)
 
 
