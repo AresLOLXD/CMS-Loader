@@ -134,7 +134,7 @@ describe('procesaRegistro (addParticipation)', () => {
             contest: 'contest_col',
             usuario: 'user_col',
             tiempo_extra: 'te_col',
-        }).catch(e => e as Error)
+        }).catch(e => e as Error) as Error
         expect(error.message).not.toMatch('tiempo retraso')
     })
 })
