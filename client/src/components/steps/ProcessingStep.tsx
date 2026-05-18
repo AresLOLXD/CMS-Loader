@@ -16,10 +16,11 @@ export default function ProcessingStep() {
   const [percent, setPercent] = useState(0)
   const [error, setError] = useState('')
 
-  if (!jobId.value) {
-    wizardStep.value = 'mapping'
-    return null
-  }
+  useEffect(() => {
+    if (!jobId.value) {
+      wizardStep.value = 'mapping'
+    }
+  }, [])
 
   useEffect(() => {
     const currentJobId = jobId.value
