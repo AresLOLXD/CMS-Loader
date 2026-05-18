@@ -127,12 +127,13 @@ router.post("/", limiter, async (req: Request, res: Response) => {
         })
     )
 
-    Promise.all(tasks)
+    void Promise.all(tasks)
         .then(() => {
             job.results.sort((a, b) => a.Indice - b.Indice)
             jobStore.update(job.id, { status: 'done' })
         })
-        .catch(() => {
+        .catch((err: unknown) => {
+            console.error("Error inesperado en el procesamiento del trabajo:", err)
             jobStore.update(job.id, { status: 'error' })
         })
 })

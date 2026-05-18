@@ -87,7 +87,7 @@ router.post("/", limiter, async (req: Request, res: Response) => {
                 const salida = await procesaRegistro({ registro, email, timezone, languages, password, nombre, apellidos, usuario })
                 if (!password || !registro[password]) {
                     const matched = /password\s+(\w+)/.exec(salida)
-                    if (!matched) throw new Error(`Revisar usuario ${usuario}, contraseña no se pudo obtener`)
+                    if (!matched) throw new Error(`Revisar usuario ${registro[usuario]}, contraseña no se pudo obtener`)
                     job.results.push({ Indice: i + 2, Extra: matched[1] })
                 }
             } catch (err) {
@@ -98,12 +98,13 @@ router.post("/", limiter, async (req: Request, res: Response) => {
         })
     )
 
-    Promise.all(tasks)
+    void Promise.all(tasks)
         .then(() => {
             job.results.sort((a, b) => a.Indice - b.Indice)
             jobStore.update(job.id, { status: 'done' })
         })
-        .catch(() => {
+        .catch((err: unknown) => {
+            console.error("Error inesperado en el procesamiento del trabajo:", err)
             jobStore.update(job.id, { status: 'error' })
         })
 })
