@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.1...v1.0.2) (2026-05-18)
+
+
+### Bug Fixes
+
+* save session before generating CSRF token to ensure consistent sessionID ([ad727a5](https://github.com/AresLOLXD/CMS-Loader/commit/ad727a593f7f75881070dfcfd4731e939379c2c5))
+
 ## [1.0.1](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.0...v1.0.1) (2026-05-18)
 
 
