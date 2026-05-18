@@ -11,6 +11,7 @@ Copiar `.env.example` a `.env` y completar los valores:
 | `ADMIN_PASSWORD` | Sí | Contraseña del administrador |
 | `PORT` | No (default: `9995`) | Puerto en que escucha el servidor |
 | `NODE_ENV` | No | Establecer en `production` en despliegue real |
+| `HTTPS_ENABLED` | No (default: `false`) | Establecer en `true` para activar cookies `secure` y prefijo `__Host-`; requerido cuando se sirve sobre HTTPS |
 | `CMS_ENV_SCRIPT` | No | Ruta absoluta a un script shell que exporta el entorno del CLI de CMS |
 | `CMS_CONCURRENCY` | No (default: `5`) | Número de llamadas concurrentes al CLI de CMS por trabajo |
 
@@ -31,7 +32,7 @@ NODE_ENV=production node dist/index.js
 
 ## Detrás de un reverse proxy
 
-Cuando la aplicación corre detrás de nginx u otro proxy, `NODE_ENV=production` habilita automáticamente `trust proxy: 1`, cookies `secure: true` y `sameSite: none`. Sin esto, las cookies de sesión no funcionarán sobre HTTPS.
+Cuando la aplicación corre detrás de nginx u otro proxy, configurar ambas variables: `NODE_ENV=production` habilita `trust proxy: 1`, y `HTTPS_ENABLED=true` activa las cookies `secure: true` y `sameSite: none`. Sin `HTTPS_ENABLED=true`, las cookies de sesión no funcionarán correctamente sobre HTTPS.
 
 Ejemplo mínimo de configuración nginx:
 
