@@ -15,7 +15,8 @@ router.get("/logout", (req, res) => {
   req.session.destroy(() => res.redirect('/'))
 })
 
-router.get("/api/csrf-token", (req, res) => {
+router.get("/api/csrf-token", async (req, res) => {
+  await req.session.saveAsync?.()
   const token = generateToken(req, res)
   res.json({ token })
 })
