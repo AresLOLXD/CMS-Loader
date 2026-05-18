@@ -1,1 +1,5 @@
+LAST_MSG=$(git log -1 --pretty=%B)
+if echo "$LAST_MSG" | grep -qE '\[skip ci\]|^chore\(release\)'; then
+  exit 0
+fi
 npx semantic-release --no-ci
