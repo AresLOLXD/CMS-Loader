@@ -27,6 +27,9 @@ function validateEnv(): void {
     console.error(`Missing required env vars: ${missing.join(', ')}`)
     process.exit(1)
   }
+  if (process.env.NODE_ENV === 'production' && !process.env.HTTPS_ENABLED) {
+    console.warn('Warning: NODE_ENV=production but HTTPS_ENABLED is not set. Defaulting to insecure cookies.')
+  }
 }
 validateEnv()
 jobStore.startTtlCleanup()
@@ -34,6 +37,7 @@ jobStore.startTtlCleanup()
 const app = express()
 const port = Number(process.env.PORT) || 9995
 const isProd = process.env.NODE_ENV === "production"
+const useSecureCookies = process.env.HTTPS_ENABLED === 'true'
 
 // Mover trust proxy antes de session y adaptarlo a entorno
 app.set('trust proxy', isProd ? 1 : 'loopback')
@@ -71,9 +75,9 @@ if (!isProd) {
 app.use(session({
 	secret: process.env.SESSION_SECRET!,
 	cookie: {
-		secure: isProd,
+		secure: useSecureCookies,
 		maxAge: 1000 * 60 * 5,
-		sameSite: isProd ? "none" : "lax",
+		sameSite: useSecureCookies ? "none" : "lax",
 	},
 	// Mejor rendimiento: evitar resave innecesario y no guardar sesiones vacías
 	resave: false,
