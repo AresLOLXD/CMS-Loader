@@ -57,7 +57,7 @@ const accessLogStream = createStream("access.log", {
 	interval: "1d",
 	compress: "gzip",
 	maxFiles: 20,
-	path: join(__dirname, "logs"),
+	path: join(import.meta.dirname, "logs"),
 })
 
 // Logger en archivo y consola con formato detallado (combined + dev)
@@ -92,13 +92,12 @@ app.use((req, _res, next) => {
 app.use(cookieParser(process.env.SESSION_SECRET!))
 app.use(doubleCsrfProtection)
 
-app.use("/public", express.static(join(__dirname, "public")))
-app.use("/", express.static(join(__dirname, "public", "html")))
+app.use(express.static(join(import.meta.dirname, '../client/dist')))
 app.use(Rutas)
 
-app.set('view engine', 'ejs');
-app.set("views", join(__dirname, "views"))
-
+app.get('/{*path}', (_req, res) => {
+  res.sendFile(join(import.meta.dirname, '../client/dist', 'index.html'))
+})
 
 // Arranque con manejo de errores
 app.listen(port, () => {
