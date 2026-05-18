@@ -3,3 +3,4 @@ if echo "$LAST_MSG" | grep -qE '\[skip ci\]|^chore\(release\)'; then
   exit 0
 fi
 npx semantic-release --no-ci
+git pull --rebase
