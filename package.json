@@ -5,9 +5,9 @@
   "scripts": {
     "clean": "rimraf dist/",
     "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/*.ejs dist/",
-    "start": "npm run build && node dist/index.js",
+    "start": "pnpm run build && node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "build": "npm run clean && npx tsc && npm run copy-files",
+    "build": "pnpm run clean && pnpm exec tsc && pnpm run copy-files",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -49,6 +49,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.1",
-    "vitest": "^2.1.9"
+    "vitest": "^4.1.6"
   }
 }
