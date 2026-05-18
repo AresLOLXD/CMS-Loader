@@ -1,3 +1,4 @@
 import { render } from 'preact'
+import App from './App'
 
-render(<p>Cargando...</p>, document.getElementById('root')!)
+render(<App />, document.getElementById('root')!)
