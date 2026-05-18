@@ -95,8 +95,11 @@ app.use(doubleCsrfProtection)
 app.use(express.static(join(import.meta.dirname, '../client/dist')))
 app.use(Rutas)
 
-app.get('/{*path}', (_req, res) => {
-  res.sendFile(join(import.meta.dirname, '../client/dist', 'index.html'))
+app.get('/{*path}', (_req, res, next) => {
+  if (_req.path.startsWith('/api/')) { next(); return }
+  res.sendFile(join(import.meta.dirname, '../client/dist', 'index.html'), err => {
+    if (err) next(err)
+  })
 })
 
 // Arranque con manejo de errores
