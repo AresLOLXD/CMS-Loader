@@ -190,9 +190,12 @@ async function submitSelectionForm({
             if (progressEl) progressEl.style.display = "";
 
             const source = new EventSource(`/jobs/${jobId}/events`);
+            let completed = false;
 
             source.addEventListener("progress", (e) => {
-                const { processed, total, percent } = JSON.parse(e.data);
+                let parsed;
+                try { parsed = JSON.parse(e.data); } catch (ignored) { return; }
+                const { processed, total, percent } = parsed;
                 setStatus(statusId, `Procesando ${processed} de ${total} registros...`, "info");
                 if (progressCount) progressCount.textContent = processed;
                 if (progressTotal) progressTotal.textContent = total;
@@ -200,6 +203,7 @@ async function submitSelectionForm({
             });
 
             source.addEventListener("done", async () => {
+                completed = true;
                 source.close();
                 setStatus(statusId, "Descargando resultados...", "info");
                 try {
@@ -213,7 +217,7 @@ async function submitSelectionForm({
                 }
                 setStatus(statusId, "Operación completada.", "success");
                 if (progressEl) progressEl.style.display = "none";
-                if (successRedirect) window.location.replace(successRedirect);
+                if (successRedirect) setTimeout(() => window.location.replace(successRedirect), 1000);
             });
 
             source.addEventListener("job-error", (e) => {
@@ -226,6 +230,7 @@ async function submitSelectionForm({
             });
 
             source.onerror = () => {
+                if (completed) return;
                 source.close();
                 setStatus(statusId, "Error de conexión con el servidor.", "error");
                 if (progressEl) progressEl.style.display = "none";
