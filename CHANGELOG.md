@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.3...v1.0.4) (2026-05-18)
+
+
+### Bug Fixes
+
+* sync local branch after semantic-release in pre-push hook ([4f8e57c](https://github.com/AresLOLXD/CMS-Loader/commit/4f8e57c5dd1c70cbd31e4e9de24d21fa3085ded1))
+
 ## [1.0.3](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.2...v1.0.3) (2026-05-18)
 
 
