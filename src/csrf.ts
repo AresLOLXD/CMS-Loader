@@ -1,15 +1,15 @@
 import { doubleCsrf } from 'csrf-csrf'
 import type { Request } from 'express'
 
-const isProd = process.env.NODE_ENV === 'production'
+const useSecureCookies = process.env.HTTPS_ENABLED === 'true'
 
 const { generateCsrfToken, doubleCsrfProtection } = doubleCsrf({
   getSecret: () => process.env.SESSION_SECRET!,
   getSessionIdentifier: (req: Request) => req.sessionID,
-  cookieName: isProd ? '__Host-csrf' : 'csrf',
+  cookieName: useSecureCookies ? '__Host-csrf' : 'csrf',
   cookieOptions: {
-    sameSite: isProd ? 'none' : 'lax',
-    secure: isProd,
+    sameSite: useSecureCookies ? 'none' : 'lax',
+    secure: useSecureCookies,
     httpOnly: true,
     path: '/'
   },
