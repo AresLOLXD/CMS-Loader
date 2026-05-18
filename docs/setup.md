@@ -6,7 +6,7 @@ Copiar `.env.example` a `.env` y completar los valores:
 
 | Variable | Requerida | Descripción |
 |---|---|---|
-| `SESSION_SECRET` | Sí | Cadena aleatoria de 32+ caracteres para firmar cookies de sesión |
+| `SESSION_SECRET` | Sí | Cadena aleatoria de 32+ caracteres para firmar cookies de sesión y tokens CSRF |
 | `ADMIN_USER` | Sí | Nombre de usuario del administrador |
 | `ADMIN_PASSWORD` | Sí | Contraseña del administrador |
 | `PORT` | No (default: `9995`) | Puerto en que escucha el servidor |
@@ -17,10 +17,17 @@ Copiar `.env.example` a `.env` y completar los valores:
 ## Correr en producción
 
 ```bash
-NODE_ENV=production pnpm start
+# 1. Instalar dependencias (incluyendo devDependencies para la compilación)
+pnpm install
+
+# 2. Compilar TypeScript y copiar assets
+pnpm run build
+
+# 3. Ejecutar en producción
+NODE_ENV=production node dist/index.js
 ```
 
-Esto ejecuta `pnpm run build` (compila TypeScript) y luego `node dist/index.js`.
+> No usar `pnpm install --prod` antes del build: las devDependencies (TypeScript, rimraf, copyfiles) son necesarias para compilar.
 
 ## Detrás de un reverse proxy
 
@@ -51,6 +58,8 @@ server {
 ```
 
 > La directiva `proxy_buffering off` es necesaria para que los eventos SSE (barra de progreso) lleguen al cliente en tiempo real.
+
+> Ajustar `proxy_read_timeout` según el volumen de datos esperado. Para lotes grandes, considerar un valor más alto (por ejemplo, `600s` o `1800s`).
 
 ## CLI de CMS: modo contenedor vs. bare-metal
 
