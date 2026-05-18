@@ -75,6 +75,10 @@ router.post("/", limiter, async (req: Request, res: Response) => {
         res.status(400).json({ success: false, message: "No hay registros cargados" })
         return
     }
+    if (job.status !== 'pending') {
+        res.status(409).json({ success: false, message: "Trabajo ya iniciado" })
+        return
+    }
 
     const { email, timezone, languages, password, nombre, apellidos, usuario } = req.body
     jobStore.update(job.id, { status: 'running', filename: 'Resultados.csv' })

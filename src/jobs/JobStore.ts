@@ -11,12 +11,13 @@ interface Job {
     columnas: string[]
     filename: string
     createdAt: Date
+    ownerSessionId: string
 }
 
 class JobStore {
     private jobs = new Map<string, Job>()
 
-    create(records: CSVRecord[], columnas: string[]): Job {
+    create(records: CSVRecord[], columnas: string[], ownerSessionId: string): Job {
         const id = randomUUID()
         const job: Job = {
             id,
@@ -28,6 +29,7 @@ class JobStore {
             columnas,
             filename: '',
             createdAt: new Date(),
+            ownerSessionId,
         }
         this.jobs.set(id, job)
         return job

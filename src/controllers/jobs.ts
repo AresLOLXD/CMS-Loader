@@ -14,6 +14,10 @@ router.get("/:id/events", (req: Request<{ id: string }>, res: Response) => {
         res.status(404).json({ success: false, message: "Trabajo no encontrado" })
         return
     }
+    if (job.ownerSessionId !== req.sessionID) {
+        res.status(403).json({ success: false, message: "Acceso denegado" })
+        return
+    }
 
     res.setHeader("Content-Type", "text/event-stream")
     res.setHeader("Cache-Control", "no-cache")
@@ -74,6 +78,10 @@ router.get("/:id/result", (req: Request<{ id: string }>, res: Response) => {
     const job = jobStore.get(req.params.id)
     if (!job) {
         res.status(404).json({ success: false, message: "Trabajo no encontrado" })
+        return
+    }
+    if (job.ownerSessionId !== req.sessionID) {
+        res.status(403).json({ success: false, message: "Acceso denegado" })
         return
     }
     if (job.status !== 'done') {

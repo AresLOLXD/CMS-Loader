@@ -64,7 +64,10 @@ router.post("/", limiter, (req: Request, res: Response, next: NextFunction) => {
             return nuevasColumnasEncontradas;
         }, [] as string[]);
 
-        const job = jobStore.create(registros, columnasFinales)
+        if (req.session.activeJobId) {
+            jobStore.delete(req.session.activeJobId)
+        }
+        const job = jobStore.create(registros, columnasFinales, req.sessionID)
         req.session.activeJobId = job.id
         if (req.session.saveAsync) {
             await req.session.saveAsync()
