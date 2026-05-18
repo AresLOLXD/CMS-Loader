@@ -5,5 +5,9 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
     next()
     return
   }
+  if (req.accepts('json')) {
+    res.status(401).json({ success: false, message: 'No autenticado' })
+    return
+  }
   res.redirect('/login')
 }
