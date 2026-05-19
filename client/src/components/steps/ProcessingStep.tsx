@@ -9,6 +9,7 @@ function downloadBlob(blob: Blob, filename: string) {
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
+  // 100 ms gives Firefox time to initiate the async download before the blob URL is freed
   setTimeout(() => URL.revokeObjectURL(url), 100)
 }
 
