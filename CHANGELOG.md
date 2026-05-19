@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.5...v1.0.6) (2026-05-19)
+
+
+### Bug Fixes
+
+* append <a> to DOM and defer revokeObjectURL so Firefox downloads CSV ([9f5a5aa](https://github.com/AresLOLXD/CMS-Loader/commit/9f5a5aae2384f95e01e0d3a191d85ef69c056f94))
+
 ## [1.0.5](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.4...v1.0.5) (2026-05-19)
 
 
