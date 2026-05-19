@@ -1,3 +1,11 @@
+## [1.0.5](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.4...v1.0.5) (2026-05-19)
+
+
+### Bug Fixes
+
+* decouple csrf cookie flags from NODE_ENV via HTTPS_ENABLED ([19d8a92](https://github.com/AresLOLXD/CMS-Loader/commit/19d8a923b532bfe5b05b16213c00658e3c6b41fb))
+* decouple session cookie flags from NODE_ENV via HTTPS_ENABLED ([5bb6a74](https://github.com/AresLOLXD/CMS-Loader/commit/5bb6a74735263e553e405ddd904ded2b35ba1a3e))
+
 ## [1.0.4](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.3...v1.0.4) (2026-05-18)
 
 
