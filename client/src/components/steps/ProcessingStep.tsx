@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'preact/hooks'
+import { apiUrl } from '../../api'
 import { jobId, mode, wizardStep } from '../../signals'
 
 function downloadBlob(blob: Blob, filename: string) {
@@ -30,7 +31,7 @@ export default function ProcessingStep() {
     if (!currentJobId) return
 
     let closed = false
-    const source = new EventSource(`/jobs/${currentJobId}/events`)
+    const source = new EventSource(apiUrl(`/jobs/${currentJobId}/events`))
 
     source.addEventListener('progress', (e: MessageEvent) => {
       const data = JSON.parse(e.data) as { processed: number; total: number; percent: number }
@@ -44,7 +45,7 @@ export default function ProcessingStep() {
       source.close()
       const filename = mode.value === 'users' ? 'Resultados usuarios.csv' : 'Errores concurso.csv'
       try {
-        const res = await fetch(`/jobs/${currentJobId}/result`)
+        const res = await fetch(apiUrl(`/jobs/${currentJobId}/result`))
         if (res.ok) {
           const blob = await res.blob()
           if (blob.size > 0) downloadBlob(blob, filename)
