@@ -35,7 +35,7 @@ export default function UploadStep() {
 
       if (res.status === 403) {
         token = await retryCsrf()
-        res = await fetch('/analyzeCSV', {
+        res = await fetch(apiUrl('/analyzeCSV'), {
           method: 'POST',
           headers: { 'x-csrf-token': token },
           body: formData,
