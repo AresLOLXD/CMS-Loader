@@ -1,4 +1,5 @@
 import { columns, jobId, mapping, mode, wizardStep } from '../../signals'
+import { apiUrl } from '../../api'
 
 function resetWizard() {
   wizardStep.value = 'upload'
@@ -15,7 +16,7 @@ export default function DoneStep() {
       <p>El archivo de resultados fue descargado automáticamente.</p>
       <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
         <button onClick={resetWizard} style={{ padding: '8px 16px' }}>Nueva carga</button>
-        <button onClick={() => { window.location.href = '/logout' }} style={{ padding: '8px 16px' }}>
+        <button onClick={() => { window.location.href = apiUrl('/logout') }} style={{ padding: '8px 16px' }}>
           Cerrar sesión
         </button>
       </div>
