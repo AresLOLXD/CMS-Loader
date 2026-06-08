@@ -1,4 +1,5 @@
 import { useEffect } from 'preact/hooks'
+import { apiUrl } from './api'
 import { authStatus, csrfToken, wizardStep } from './signals'
 import Login from './components/Login'
 import UploadStep from './components/steps/UploadStep'
@@ -7,7 +8,7 @@ import ProcessingStep from './components/steps/ProcessingStep'
 import DoneStep from './components/steps/DoneStep'
 
 async function loadCsrfToken() {
-  const res = await fetch('/api/csrf-token')
+  const res = await fetch(apiUrl('/api/csrf-token'))
   if (!res.ok) return
   const body = await res.json() as { token: string }
   csrfToken.value = body.token
@@ -15,7 +16,7 @@ async function loadCsrfToken() {
 
 export default function App() {
   useEffect(() => {
-    fetch('/api/me')
+    fetch(apiUrl('/api/me'))
       .then(r => r.json())
       .then(async (body: { authenticated: boolean }) => {
         await loadCsrfToken()
