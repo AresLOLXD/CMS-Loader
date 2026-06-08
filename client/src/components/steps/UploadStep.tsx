@@ -1,9 +1,10 @@
 import { useState } from 'preact/hooks'
 import { csrfToken, columns, mode, wizardStep } from '../../signals'
 import type { Mode } from '../../signals'
+import { apiUrl } from '../../api'
 
 async function retryCsrf(): Promise<string> {
-  const res = await fetch('/api/csrf-token')
+  const res = await fetch(apiUrl('/api/csrf-token'))
   const body = await res.json() as { token: string }
   csrfToken.value = body.token
   return body.token
@@ -26,7 +27,7 @@ export default function UploadStep() {
     let token = csrfToken.value
 
     try {
-      let res = await fetch('/analyzeCSV', {
+      let res = await fetch(apiUrl('/analyzeCSV'), {
         method: 'POST',
         headers: { 'x-csrf-token': token },
         body: formData,
