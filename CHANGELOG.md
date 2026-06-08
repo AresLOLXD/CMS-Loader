@@ -1,3 +1,22 @@
+# [1.1.0](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.6...v1.1.0) (2026-06-08)
+
+
+### Bug Fixes
+
+* prefix /logout navigation with apiUrl in DoneStep ([05aa815](https://github.com/AresLOLXD/CMS-Loader/commit/05aa815471eb9918947d95e21708c40d21e2e46c))
+* update missed analyzeCSV retry fetch to use apiUrl ([abefb1a](https://github.com/AresLOLXD/CMS-Loader/commit/abefb1a17909fdf747b5aa84d13991d44d4c1538))
+
+
+### Features
+
+* add apiUrl helper for base-path-aware fetch URLs ([227cecd](https://github.com/AresLOLXD/CMS-Loader/commit/227cecdd08535dbda571d7f11248707d8e760933))
+* read VITE_BASE_PATH as Vite base option ([1e9e6b8](https://github.com/AresLOLXD/CMS-Loader/commit/1e9e6b8badfce92f8025c80711a57228c42f05d3))
+* use apiUrl in App.tsx ([03fb5e2](https://github.com/AresLOLXD/CMS-Loader/commit/03fb5e23e2893cc05ea94a604d45353a4fc72109))
+* use apiUrl in Login.tsx ([a57b5c1](https://github.com/AresLOLXD/CMS-Loader/commit/a57b5c118e1f03fc2e71c9721e3c51a36200cabb))
+* use apiUrl in MappingStep.tsx ([34d6656](https://github.com/AresLOLXD/CMS-Loader/commit/34d66563c8cc930a0af26e6009146f20430db47e))
+* use apiUrl in ProcessingStep.tsx ([9484fc8](https://github.com/AresLOLXD/CMS-Loader/commit/9484fc839e299acc61b769a128084b96778117de))
+* use apiUrl in UploadStep.tsx ([cdb8ce7](https://github.com/AresLOLXD/CMS-Loader/commit/cdb8ce7344ac901fa8c3e0f5b55633b2f3105711))
+
 ## [1.0.6](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.5...v1.0.6) (2026-05-19)
 
 
