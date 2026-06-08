@@ -1,9 +1,10 @@
 import { useState } from 'preact/hooks'
 import { csrfToken, columns, mode, mapping, jobId, wizardStep } from '../../signals'
 import { fieldsConfig } from '../../config'
+import { apiUrl } from '../../api'
 
 async function retryCsrf(): Promise<string> {
-  const res = await fetch('/api/csrf-token')
+  const res = await fetch(apiUrl('/api/csrf-token'))
   const body = await res.json() as { token: string }
   csrfToken.value = body.token
   return body.token
@@ -30,7 +31,7 @@ export default function MappingStep() {
     let token = csrfToken.value
 
     try {
-      let res = await fetch(endpoint, {
+      let res = await fetch(apiUrl(endpoint), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-csrf-token': token },
         body: JSON.stringify(localMapping),
@@ -38,7 +39,7 @@ export default function MappingStep() {
 
       if (res.status === 403) {
         token = await retryCsrf()
-        res = await fetch(endpoint, {
+        res = await fetch(apiUrl(endpoint), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-csrf-token': token },
           body: JSON.stringify(localMapping),
