@@ -10,6 +10,7 @@ const { version } = JSON.parse(
 export default defineConfig({
   root: 'client',
   plugins: [preact()],
+  base: process.env.VITE_BASE_PATH ?? '/',
   define: {
     'import.meta.env.VITE_APP_VERSION': JSON.stringify(version),
   },
