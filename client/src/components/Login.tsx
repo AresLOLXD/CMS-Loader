@@ -1,8 +1,9 @@
 import { useState } from 'preact/hooks'
 import { authStatus, csrfToken } from '../signals'
+import { apiUrl } from '../api'
 
 async function refreshCsrfToken() {
-  const res = await fetch('/api/csrf-token')
+  const res = await fetch(apiUrl('/api/csrf-token'))
   if (!res.ok) return
   const body = await res.json() as { token: string }
   csrfToken.value = body.token
@@ -20,7 +21,7 @@ export default function Login() {
     setError('')
 
     try {
-      const res = await fetch('/login', {
+      const res = await fetch(apiUrl('/login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
