@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/AresLOLXD/CMS-Loader/compare/v1.1.0...v1.2.0) (2026-06-20)
+
+
+### Features
+
+* add group field to addParticipation ([9a186bd](https://github.com/AresLOLXD/CMS-Loader/commit/9a186bde71db83fdf9ade6f7f7b6f5223a788d21))
+
 # [1.1.0](https://github.com/AresLOLXD/CMS-Loader/compare/v1.0.6...v1.1.0) (2026-06-08)
 
 
