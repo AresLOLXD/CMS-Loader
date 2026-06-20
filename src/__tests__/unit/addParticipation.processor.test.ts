@@ -110,6 +110,21 @@ describe('procesaRegistro (addParticipation)', () => {
         expect(mockExecute.mock.calls[0][0]).toContain('--unrestricted')
     })
 
+    it('adds -g when grupo is mapped', async () => {
+        await procesaRegistro({
+            registro: { ...BASE, grupo_col: 'grupoA' },
+            contest: 'contest_col',
+            usuario: 'user_col',
+            grupo: 'grupo_col',
+        })
+        expect(mockExecute.mock.calls[0][0]).toMatch(/-g\s+'?grupoA'?/)
+    })
+
+    it('does not add -g when grupo is not mapped', async () => {
+        await procesaRegistro({ registro: BASE, contest: 'contest_col', usuario: 'user_col' })
+        expect(mockExecute.mock.calls[0][0]).not.toContain('-g')
+    })
+
     it('throws for non-numeric tiempo_retraso with "tiempo retraso" in message', async () => {
         await expect(procesaRegistro({
             registro: { ...BASE, tr_col: 'abc' },

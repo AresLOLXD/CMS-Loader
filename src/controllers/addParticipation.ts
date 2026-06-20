@@ -13,6 +13,7 @@ export async function procesaRegistro(
     {
         registro,
         contest,
+        grupo,
         ip,
         tiempo_retraso,
         tiempo_extra,
@@ -25,6 +26,7 @@ export async function procesaRegistro(
         registro: CSVRecord,
         usuario: string,
         contest: string,
+        grupo?: string,
         ip?: string,
         tiempo_retraso?: string,
         tiempo_extra?: string,
@@ -45,6 +47,11 @@ export async function procesaRegistro(
         argumentos.push(contest_numero.toString())
     } else {
         throw new Error("Concurso no definido")
+    }
+
+    if (grupo && registro[grupo]) {
+        argumentos.push("-g")
+        argumentos.push(registro[grupo])
     }
 
     if (ip && registro[ip]) {
@@ -114,7 +121,7 @@ router.post("/", limiter, async (req: Request, res: Response) => {
         return
     }
 
-    const { contest, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario } = req.body
+    const { contest, grupo, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario } = req.body
     jobStore.update(job.id, { status: 'running', filename: 'Errores.csv' })
     res.json({ jobId: job.id })
 
@@ -122,7 +129,7 @@ router.post("/", limiter, async (req: Request, res: Response) => {
     const tasks = job.records.map((registro, i) =>
         limit(async () => {
             try {
-                await procesaRegistro({ registro, contest, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario })
+                await procesaRegistro({ registro, contest, grupo, ip, tiempo_retraso, tiempo_extra, team, oculto, sin_restricciones, password, usuario })
             } catch (err) {
                 job.results.push({ Indice: i + 2, Extra: err instanceof Error ? err.message : 'Error procesando la fila' })
             } finally {

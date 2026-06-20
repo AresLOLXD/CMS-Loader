@@ -17,6 +17,7 @@ export const fieldsConfig: Record<'users' | 'contest', FieldConfig[]> = {
   contest: [
     { name: 'usuario', label: 'Usuario', required: true },
     { name: 'contest', label: 'Concurso', required: true },
+    { name: 'grupo', label: 'Grupo' },
     { name: 'ip', label: 'IP' },
     { name: 'tiempo_retraso', label: 'Tiempo retraso' },
     { name: 'tiempo_extra', label: 'Tiempo extra' },
