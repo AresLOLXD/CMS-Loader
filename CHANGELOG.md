@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/AresLOLXD/CMS-Loader/compare/v1.2.0...v1.2.1) (2026-07-24)
+
+
+### Bug Fixes
+
+* **ci:** bump GitHub Actions to Node 24-based versions ([82173ad](https://github.com/AresLOLXD/CMS-Loader/commit/82173ad4ac5bde57f0e14678c7af7f7c1e4efb31))
+
 # [1.2.0](https://github.com/AresLOLXD/CMS-Loader/compare/v1.1.0...v1.2.0) (2026-06-20)
 
 
