@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/AresLOLXD/CMS-Loader/compare/v1.2.1...v1.2.2) (2026-08-13)
+
+
+### Bug Fixes
+
+* **release:** bump patch version on chore(deps) commits ([10c3277](https://github.com/AresLOLXD/CMS-Loader/commit/10c3277dfb23d0ac97dc2d4a2915afe57b618972))
+
 ## [1.2.1](https://github.com/AresLOLXD/CMS-Loader/compare/v1.2.0...v1.2.1) (2026-07-24)
 
 
