@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/AresLOLXD/CMS-Loader/compare/v1.2.3...v1.2.4) (2026-09-05)
+
+
+### Bug Fixes
+
+* **deps:** patch browserslist high-severity vulnerability ([b92ec0d](https://github.com/AresLOLXD/CMS-Loader/commit/b92ec0d2475c3e5769609ec203593aa96845b7da)), closes [hi#severity](https://github.com/hi/issues/severity)
+
 ## [1.2.3](https://github.com/AresLOLXD/CMS-Loader/compare/v1.2.2...v1.2.3) (2026-09-04)
 
 ## [1.2.2](https://github.com/AresLOLXD/CMS-Loader/compare/v1.2.1...v1.2.2) (2026-08-13)
