@@ -4,6 +4,7 @@ packages:
 overrides:
   undici@^6: "^6.27.0"
   undici@^7: "^7.28.0"
+  browserslist: "^4.28.7"
 
 onlyBuiltDependencies:
   - esbuild
