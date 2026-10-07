@@ -1,5 +1,7 @@
 # CMS-Loader
 
+> **⚠️ Proyecto retirado.** CMS-Loader ya no se mantiene ni está desplegado. La última versión es la v1.2.5 (octubre de 2026). Sus dependencias no recibirán más actualizaciones de seguridad y el hardening de ejecución de CLI descrito en [`docs/superpowers/specs/2026-09-04-cli-exec-security-hardening-design.md`](docs/superpowers/specs/2026-09-04-cli-exec-security-hardening-design.md) nunca se implementó. No lo despliegues tal cual; si lo reutilizas, actualiza las dependencias y aplica ese plan primero.
+
 Herramienta web de administración para cargar usuarios y participaciones en masa a una instalación de [CMS](https://cms-dev.github.io/) mediante archivos CSV. Invoca los CLI `cmsAddUser` y `cmsAddParticipation` del sistema de forma segura desde el navegador. Diseñada para uso interno por administradores de concursos de programación.
 
 **Backend:** Express 5, TypeScript, tsx, express-session, csrf-csrf, multer  
